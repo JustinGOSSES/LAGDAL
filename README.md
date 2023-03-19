@@ -126,7 +126,6 @@ interesting fossils, gems, or minerals to find?
 
 
 #### NOTES on how to run...
-Using dotnet script to run individual CSX files https://github.com/dotnet-script/dotnet-script
 
 
 ## Early Results

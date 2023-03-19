@@ -127,3 +127,19 @@ interesting fossils, gems, or minerals to find?
 
 #### NOTES on how to run...
 Using dotnet script to run individual CSX files https://github.com/dotnet-script/dotnet-script
+
+
+## Early Results
+
+
+#### Calling Macrostrat API and then using deterministic & LLM semantic functions to summarize the JSON data results into an easily readable format
+`predicted geology description for top 2 layers at location of:  New York City, New York  is  
+
+This location is composed of two stratigraphic layers. The first layer is composed of sand, with a siliciclastic sedimentary lithology and a shoreface marine depositional environment. It has a thickness of 10 meters and an age range of 0 to 0.0117 million years. The second layer is composed of gravel and sand, with a siliciclastic sedimentary lithology and a combination of estuary/bay, outwash plain, and lacustrine indet. depositional environments. It has a thickness of 15 meters and an age range of 0.4398 to 0.8678 million years. This layer also has an economic value as it is composed of sand and gravel, which can be used for construction materials.`
+
+`
+`predicted geology description for top 2 layers at location of:  Port Clinton, Ohio  is  
+
+This location is composed of two stratigraphic layers. The upper layer is 0.0117 to 2.58 million years old and is composed of gravel, sand, and clay. The depositional environment is a combination of glacial and lacustrine. The lower layer is 358.9 to 398.6625 million years old and is composed of shale, sandstone, limestone, and dolomite. The depositional environment is mostly inferred marine, with a small portion of the layer being marine. Both layers are sedimentary in nature and provide a record of the geologic history of the area.
+`
+

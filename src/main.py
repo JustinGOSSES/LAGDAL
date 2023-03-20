@@ -16,8 +16,8 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 #location =  41.5120, -82.9377 (Port Clinton, Ohio, USA)
-latitude = 51.1784
-longitude = -115.5708
+latitude = 58.9700
+longitude = 5.7331
 
 stateAndCountry = getStateAndCountyFromLatLong(latitude,longitude)
 fullAddress = getAddressFromLatLong(latitude,longitude)

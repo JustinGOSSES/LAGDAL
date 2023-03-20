@@ -29,9 +29,8 @@ def macrostratOnlyReturnFirstTwoLayers(macrostrat_column_json):
 def jsonToText(macrostrat_column_json):
     return json.dumps(macrostrat_column_json)
 
-# def convertStratColumnToText(stratColumn):
-    
-#     return text
+
+########## Semantic prompts
 
 macroStratColSummarizationTop = PromptTemplate(
     input_variables=["macrostrat_column_json"],
@@ -50,6 +49,24 @@ macroStratColSummarizationSecondMostLayer = PromptTemplate(
 
 macroStratColSummarization= PromptTemplate(
     input_variables=["macrostrat_column_json"],
-    template="Given the following macrostrat stratigraphic column information in JSON format in which each stratigraphic layer is a different object in the json and t_age is youngest most age and b_age is oldest age for that unit and lith=lithology and env=depositional environment:  {macrostrat_column_json}  use that information to summarize the geology of the location in a 5-15 sentences of text. Be sure to describe each of the two layers separately."
+    template="""
+    Given the following macrostrat stratigraphic column information in JSON format in which each stratigraphic layer is a different object in the json 
+    
+    And within that JSON the following keys have these meanings: 
+    t_age = youngest most age for that stratigraphic unit in terms of millions of years
+    b_age = oldest age for that stratigraphic unit in terms of millions of years
+    lith = lithology
+    env = predicted depositional environment
+    pro = probability of each lithology or depositional environment in a given unit
+    
+    --input data start-- {macrostrat_column_json}  --input data end-- 
+    
+    Use that information to summarize in a 7-15 sentences of text the geology of the top two straigraphic layers at that location. 
+    Be sure to:
+     - Describe each of the two layers separately and include the words 'top two layers'. 
+     - Describe top and bottom ages of each stratigraphic unit in terms of "millions of years".
+     - If there is a gap between the age of the top most and second most layer, describe that gap in terms of "gap of millions of years".
+     - Be sure to mention percentage of lithology and depositional enviornment as well as age.
+    """
 )
 

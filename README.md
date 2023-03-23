@@ -1,5 +1,5 @@
 # LAGDAL
-It's an acronym..
+It's an acronym.
 
 LLM Assisted Geology Descriptions of Arbitrary Locations = LAGDAL
 

@@ -13,7 +13,7 @@ def getPointLocationStratColumn(latitude,longitude):
     status = r.status_code
     text = r.text
     json_result = r.json()
-    print('json_result',json_result)
+    #print('json_result',json_result)
     try:
         if len(json_result["success"]["data"]) > 1:
             data = json_result["success"]["data"]
@@ -31,11 +31,11 @@ def ifNoSurfaceGeology(latitude,longitude):
     status = r.status_code
     text = r.text
     json_result = r.json()
-    print('ifNoSurfaceGeology - json_result =',json_result)
+    #print('ifNoSurfaceGeology - json_result =',json_result)
     try:
         if json_result["success"]["data"][0]['name']:
             data = json_result["success"]["data"]
-            print("geologic map data, not column data, for a point is: ",data)
+            #print("geologic map data, not column data, for a point is: ",data)
             return data
     except:
         return "No surface map geologic data available for this location."

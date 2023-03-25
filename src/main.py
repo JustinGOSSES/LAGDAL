@@ -23,8 +23,17 @@ from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extrac
 # latitude = 58.9700
 # longitude = 5.7331 
 
-latitude = 59.9139
-longitude = 10.7522
+### Oslo, Norway
+# latitude = 59.9139
+# longitude = 10.7522
+
+#(Port Clinton, Ohio, USA)
+# latitude = 41.512
+# longitude = -82.9377
+
+### New York City, USA
+latitude = 40.7128 
+longitude = -74.006 
 
 #### ADDRESS RELATED CODE
 stateAndCountry = getStateAndCountyFromLatLong(latitude,longitude)
@@ -42,15 +51,15 @@ llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
 def macrostratGeologyForLocation(latitude, longitude):
     macrostrat_column_json = getPointLocationStratColumn(latitude,longitude)
     if macrostrat_column_json == "No stratigraphic column data available for this location.":
-        print("No stratigraphic column data available for this location of: ",latitude,longitude, " so we will try to get surface geology data.")
+        #print("No stratigraphic column data available for this location of: ",latitude,longitude, " so we will try to get surface geology data.")
         macrostrat_map_json = ifNoSurfaceGeology(latitude,longitude)
-        print("macrostrat_map_json map geologic data is",macrostrat_map_json)
+        #print("macrostrat_map_json map geologic data is",macrostrat_map_json)
         #### Using prompt for map data when there is no stratigraphic column data
         chainMacroStratWhenNotColum = LLMChain(llm=llm, prompt=macroStratColSummarizationWhenNoColumn)
         response = chainMacroStratWhenNotColum.run(macrostrat_map_json)
         
     else:
-        print("Found a stratigraphic column data available for this location of. ",latitude,longitude)
+        #print("Found a stratigraphic column data available for this location of. ",latitude,longitude)
         macrostrat_column_json = macrostratOnlyReturnFirstTwoLayers(macrostrat_column_json)
         #### Using prompt for stratigraphic column data
         chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
@@ -89,11 +98,11 @@ print("The predicted geology near the surface of that point location of is ",geo
 
 chainWiki = LLMChain(llm=llm, prompt=extractContentFromWikipediaPageContent)
 
-regional_geology_subarea = "structural ors tectonic geology"
+regional_geology_subarea = "regional geologic history"
 
 def regionalGeologyOfStateFromWikipedia(stateAndCountry, chainWiki,regional_geology_subarea):
     #search_term = "Geology of "+stateAndCountry["state"]+" state, "+stateAndCountry["country"]
-    search_term = "Geology of "+stateAndCountry["state"]
+    search_term = "Geology of "+stateAndCountry["state"]+ stateAndCountry["country"]
     wikipedia_page_object = getWikipediaPageAndProcess(search_term)
     page_content = wikipedia_page_object["content"]
     text_splitter = CharacterTextSplitter()
@@ -101,10 +110,13 @@ def regionalGeologyOfStateFromWikipedia(stateAndCountry, chainWiki,regional_geol
     docs = [Document(page_content=t) for t in texts[:3]]
     chain = load_summarize_chain(llm, chain_type="map_reduce")
     summarized_wikipedia = chain.run(docs)
-
+    wikipedia_page_title = wikipedia_page_object["title"]
     response = chainWiki.run({"subject_to_extract":regional_geology_subarea,"wikipedia_page_content":summarized_wikipedia})
-    return response
+    return {"summary":response,"wikipedia_page_title":wikipedia_page_title}
 
-regional_tectonic_geology_response = regionalGeologyOfStateFromWikipedia(stateAndCountry, chainWiki,regional_geology_subarea)
+regional_repsonse = regionalGeologyOfStateFromWikipedia(stateAndCountry, chainWiki,regional_geology_subarea)
+regional_tectonic_geology_response = regional_repsonse["summary"] 
+wikipedia_page_title = regional_repsonse["wikipedia_page_title"] 
 
-print("If we step out to a regional scale and specifically talking about the regional ", regional_geology_subarea, " of ",stateAndCountry["state"]," : ",regional_tectonic_geology_response)
+
+print("If we step back and talk about the ", regional_geology_subarea, " of ",stateAndCountry["state"],", ",stateAndCountry["country"]," based on the wikpedia page", wikipedia_page_title ,": ",regional_repsonse["summary"] )

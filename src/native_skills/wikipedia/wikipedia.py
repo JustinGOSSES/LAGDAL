@@ -6,20 +6,23 @@ import requests as requests
 import json as json
 import os
 
-def getWikipediaPageForX(subject):
+def getWikipediaPagesForX(subject):
     #### NEED TO IMRPOVE THIS AS FIRST RESULT WILL NOT ALWAYS WORK!!!
-    results_of_search = wikipedia.search(subject)
-    #print("results_of_search = ",results_of_search)
-    #print(" type of results_of_search[0]", type(results_of_search[0]))
-    wikipedia_page = wikipedia.page(results_of_search[0])
-    #print("wikipedia_page =  ",wikipedia_page)
-    #print("type of wikipedia_page", type(wikipedia_page))
-    return wikipedia_page
+    results_of_search = wikipedia.search(subject,results = 7)
+    list_of_pages = []
+    for title in results_of_search:
+        try:
+            if title.lower() == "Geology".lower():
+                pass
+            else:
+                list_of_pages.append(wikipedia.page(title))
+        except:
+            pass
+    #print("results_of_search = ",list_of_pages)
+    return list_of_pages
 
 def processWikipediaPage(wikipedia_page):
-    # print("wikipedia_page = ",wikipedia_page)
-    # wikipedia_page = wikipedia_page[0]
-    
+    #print("wikipedia_page = ",wikipedia_page)
     title = wikipedia_page.title
     url = wikipedia_page.url
     content = wikipedia_page.content
@@ -32,14 +35,41 @@ def processWikipediaPage(wikipedia_page):
         "links":links
     }
     #print("wikipage_object == ",wikipage_object)
-    print("wikipage_object == ",type(wikipage_object.content))
-    print("wikipage_object == ",len(wikipage_object.content))
+    # print("wikipage_object == ",type(wikipage_object["content"]))
+    # print("wikipage_object == ",len(wikipage_object["content"]))
+    # print("wikipage_object == ",len(wikipage_object["content"][0:1000]))
     return wikipage_object
-    
+
+
+def count_words_in_string(words, string):
+    count = 0
+    for word in words:
+        count += string.count(word)
+    return count
+
+geologicWordsList = ["Rock", "Mineral", "Formation", "Sedimentary", "Igneous", "Metamorphic", "tectonics", "Geologic","time", "scale", "Fossil", "Stratigraphy", "Volcano", "Erosion", "Crust", "Mantle", "Geomorphology"]
+lithologyWordList = ["Sandstone", "Limestone", "Shale", "Granite", "Basalt", "Gneiss", "Conglomerate", "Schist", "Dolomite", "Chalk", "Slate", "Marble", "Quartzite", "Coal", "Arkose"]
+ageWordsList = ["Phanerozoic", "Paleozoic", "Mesozoic", "Cenozoic", "Precambrian", "Archean", "Proterozoic", "Hadean", "Cambrian", "Ordovician", "Silurian", "Devonian", "Carboniferous", "Permian", "Triassic", "Jurassic"]
+structureWordList = ["Fault", "Fold", "Thrust", "Shear zone", "Joint", "Fracture", "Cleavage", "Foliation", "Lineation", "Deformation", "Strain", "Stress", "Brittle", "Ductile", "Continental collision", "Subduction", "Orogeny", "Metamorphism", "Mylonite", "Gneiss", "Schist", "Granite", "Basalt", "Volcano", "Intrusion", "Pluton", "Suture zone", "Foreland basin", "Back-arc basin", "Terrane", "Accretionary wedge", "Detachment fault", "Oblique-slip fault", "Normal fault", "Reverse fault", "Strike-slip fault"]
+stratigraphicWordList = ["Bedding", "Stratification", "Lamination", "Cross-bedding", "Ripple marks", "Grain size", "Fossils", "Sedimentary structures", "Sedimentary facies", "Depositional environment", "Sequence stratigraphy", "Chronostratigraphy", "Lithostratigraphy", "Biostratigraphy", "Seismic stratigraphy", "Geologic maps", "Outcrop", "Formation", "Member", "Group", "Unit", "Contact", "Unconformity", "Conformity", "Disconformity", "Angular unconformity", "Nonconformity"]
+
+geologyWordList = geologicWordsList + lithologyWordList + ageWordsList + structureWordList + stratigraphicWordList
+
+def goThroughWikipediaPagesContentsAndFindPageWithMostGeo(wikipedia_pages,geologyWordList):
+    arrayOfPagesObjects = []
+    for page in wikipedia_pages:
+        wikipedia_page_object = processWikipediaPage(page)
+        words_found = count_words_in_string(geologyWordList,wikipedia_page_object["content"])
+        wordCountsPerPage = {"page":wikipedia_page_object,"word_count":words_found,"page_title":wikipedia_page_object["title"]}
+        arrayOfPagesObjects.append(wordCountsPerPage)
+    return sorted(arrayOfPagesObjects, key=lambda x: x["word_count"], reverse=True)
+
 def getWikipediaPageAndProcess(subject):
-    wikipedia_page = getWikipediaPageForX(subject)    
-    wikipedia_page_object = processWikipediaPage(wikipedia_page) 
-    return wikipedia_page_object
+    #### Get wikipedia pages on a subject
+    wikipedia_pages = getWikipediaPagesForX(subject)    
+    sortedListOfPages = goThroughWikipediaPagesContentsAndFindPageWithMostGeo(wikipedia_pages,geologyWordList)
+    return sortedListOfPages[0]["page"]
+    
     
 ########## Semantic prompts
 

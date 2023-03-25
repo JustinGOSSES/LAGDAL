@@ -32,6 +32,8 @@ def processWikipediaPage(wikipedia_page):
         "links":links
     }
     #print("wikipage_object == ",wikipage_object)
+    print("wikipage_object == ",type(wikipage_object.content))
+    print("wikipage_object == ",len(wikipage_object.content))
     return wikipage_object
     
 def getWikipediaPageAndProcess(subject):

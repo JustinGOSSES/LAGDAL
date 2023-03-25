@@ -15,9 +15,11 @@ def getPointLocationStratColumn(latitude,longitude):
     json_result = r.json()
     print('json_result',json_result)
     try:
-        if json_result["success"]["data"].length > 0:
+        if len(json_result["success"]["data"]) > 1:
             data = json_result["success"]["data"]
             return data
+        else:
+            return "No stratigraphic column data available for this location."
     except:
         return "No stratigraphic column data available for this location."
         

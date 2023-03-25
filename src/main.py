@@ -8,16 +8,23 @@ from langchain.docstore.document import Document
 
 from prompts import promptStraightGeology
 
-from native_skills.macrostrat.macrostrat import getPointLocationStratColumn, macrostratOnlyReturnFirstTwoLayers, macrostratOnlyReturnFirstLayer
-from native_skills.macrostrat.macrostrat import macroStratColSummarizationTop, macroStratColSummarizationSecondMostLayer, macroStratColSummarization
+### functions functions
+from native_skills.macrostrat.macrostrat import getPointLocationStratColumn, macrostratOnlyReturnFirstTwoLayers, macrostratOnlyReturnFirstLayer, ifNoSurfaceGeology
+#### macrostrat prompts
+from native_skills.macrostrat.macrostrat import macroStratColSummarizationTop, macroStratColSummarizationSecondMostLayer, macroStratColSummarization, macroStratColSummarizationWhenNoColumn
 
 from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddressFromLatLong
 
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 #location =  41.5120, -82.9377 (Port Clinton, Ohio, USA)
-latitude = 58.9700
-longitude = 5.7331
+
+# ## Stravenger Norway
+# latitude = 58.9700
+# longitude = 5.7331 
+
+latitude = 59.9139
+longitude = 10.7522
 
 #### ADDRESS RELATED CODE
 stateAndCountry = getStateAndCountyFromLatLong(latitude,longitude)
@@ -30,15 +37,49 @@ print(" The point location of: ",latitude, "latitude and ",longitude," longitude
 llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
 
 #### GEOLOGY OF A POINT RELATED CODE
-chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
+#chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
 
-def macrostratGeologyForLocation(latitude, longitude, chainMacroStrat):
+def macrostratGeologyForLocation(latitude, longitude):
     macrostrat_column_json = getPointLocationStratColumn(latitude,longitude)
-    macrostrat_column_json2 = macrostratOnlyReturnFirstTwoLayers(macrostrat_column_json)
-    response = chainMacroStrat.run(macrostrat_column_json2)
+    if macrostrat_column_json == "No stratigraphic column data available for this location.":
+        print("No stratigraphic column data available for this location of: ",latitude,longitude, " so we will try to get surface geology data.")
+        macrostrat_map_json = ifNoSurfaceGeology(latitude,longitude)
+        print("macrostrat_map_json map geologic data is",macrostrat_map_json)
+        #### Using prompt for map data when there is no stratigraphic column data
+        chainMacroStratWhenNotColum = LLMChain(llm=llm, prompt=macroStratColSummarizationWhenNoColumn)
+        response = chainMacroStratWhenNotColum.run(macrostrat_map_json)
+        
+    else:
+        print("Found a stratigraphic column data available for this location of. ",latitude,longitude)
+        macrostrat_column_json = macrostratOnlyReturnFirstTwoLayers(macrostrat_column_json)
+        #### Using prompt for stratigraphic column data
+        chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
+        response = chainMacroStrat.run(macrostrat_column_json)
+        
     return response
 
-geology_response = macrostratGeologyForLocation(latitude, longitude, chainMacroStrat)
+
+# def macrostratGeologyForLocation(latitude, longitude):
+#     macrostrat_column_json = getPointLocationStratColumn(latitude,longitude)
+#     if macrostrat_column_json == "No stratigraphic column data available for this location.":
+#         print("No stratigraphic column data available for this location of: ",latitude,longitude)
+#         macrostrat_column_json = ifNoSurfaceGeology(latitude,longitude)
+#         chainMacroStratWhenNotColum = LLMChain(llm=llm, prompt=macroStratColSummarizationWhenNoColumn)
+#         response = chainMacroStratWhenNotColum.run(macrostrat_column_json)
+        
+#     else:
+#         print("Found a stratigraphic column data available for this location of. ",latitude,longitude)
+#         macrostrat_column_json2 = macrostratOnlyReturnFirstTwoLayers(macrostrat_column_json)
+#         if macrostrat_column_json2 == "No stratigraphic column data available for this location.":
+#             print("No stratigraphic column data available for this location of: ",latitude,longitude)
+#             return macrostrat_column_json2
+#         else:
+#             chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
+#             response = chainMacroStrat.run(macrostrat_column_json2)
+        
+#     return response
+
+geology_response = macrostratGeologyForLocation(latitude, longitude)
 
 print("The predicted geology near the surface of that point location of is ",geology_response)
 

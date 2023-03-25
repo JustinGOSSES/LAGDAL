@@ -3,22 +3,32 @@ import requests as requests
 import json as json
 import os
 
-def getLocationDetailsFromPointCoordinates(latitude,longitude):
+
+
+    
+    
+    
+def getLocationDetailsFromPointCoordinates(latitude, longitude):
+    """ Here is the explanation for getLocationDetailsFromPointCoordinates(latitude,longitude):
+    1. We get the latitude and longitude from the user.
+    2. We get the BING_MAPS_KEY from the environment variables.
+    3. We build the URL for the request.
+    4. We make the request.
+    5. We check the status code. If it is 200, we get the result.
+    6. If the status code is not 200, we return an error message. 
+    """
     key = os.environ.get('BING_MAPS_KEY')
-    url="http://dev.virtualearth.net/REST/v1/Locations/" + str(latitude) + "," + str(longitude) +"?i&verboseplacenames=true&key=" + str(key)
-    #print("url",url)
-    #   http://dev.virtualearth.net/REST/v1/Locations/41.8781,-87.6298?i&verboseplacenames=true&key=ApoymyMCjjegZyBCvM9yhw_YFrSKaGbseri18vawWGEUFCSLMYBsh4itQ2KGnK6r
+    url = "http://dev.virtualearth.net/REST/v1/Locations/" + str(latitude) + "," + str(longitude) + "?i&verboseplacenames=true&key=" + str(key)
     r = requests.get(url, auth=('user', 'pass'))
     status = r.status_code
-    if (status == 200):
+    if status == 200:
         result = r.json()
         resultObj = result["resourceSets"][0]["resources"][0]
-        # text = r.text
-        # json_result = r.json()
-        # data = json_result["success"]["data"]
         return resultObj
-    if (status != 200):
+    if status != 200:
         return "Error: " + str(status)
+    
+    
 
 #city or neighborhood
 def getAdminDistrctFromResultObject(resultObj):
@@ -53,7 +63,7 @@ def getAddressFromLatLong(latitude,longitude):
 
 extractCityFromStreetAddress = PromptTemplate(
     input_variables=["address"],
-    template="Given the following street address that could be in any country worldwide and comes from Bing Maps API, what is the likely city, town, or village {address} "
+    template="Given the following street address that could be in any country worldwide and comes from Bing Maps API, what is the likely city, town, or village {address}. Return as a single string with just that information an address, and nothing else."
 )
 
 

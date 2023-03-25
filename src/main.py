@@ -19,14 +19,17 @@ from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extrac
 latitude = 58.9700
 longitude = 5.7331
 
+#### ADDRESS RELATED CODE
 stateAndCountry = getStateAndCountyFromLatLong(latitude,longitude)
 fullAddress = getAddressFromLatLong(latitude,longitude)
+# #print("stateAndCountry ", stateAndCountry )
 
 print(" The point location of: ",latitude, "latitude and ",longitude," longitude is located in ",fullAddress)
 
 
 llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
 
+#### GEOLOGY OF A POINT RELATED CODE
 chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
 
 def macrostratGeologyForLocation(latitude, longitude, chainMacroStrat):
@@ -39,11 +42,8 @@ geology_response = macrostratGeologyForLocation(latitude, longitude, chainMacroS
 
 print("The predicted geology near the surface of that point location of is ",geology_response)
 
-#print("chainMacroStrat prompt",chainMacroStrat.prompt)
 
-
-stateAndCountry = getStateAndCountyFromLatLong(latitude,longitude)
-#print("stateAndCountry ", stateAndCountry )
+#### REGIONAL GEOLOGY RELATED CODE
 
 
 chainWiki = LLMChain(llm=llm, prompt=extractContentFromWikipediaPageContent)

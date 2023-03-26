@@ -2,48 +2,41 @@
 
 ## Summary
 
-This document describes how I'm thinking about what large language models and what new capabilities they 
-bring to the table for building a roadside geology bot. It describes the challenges of such a product and 
-lessons learned building an experimental version using tools like: OpenAI, Langchain, Macrostrat API, 
-wikipedia API, etc.
+Although geology education is largely classroom-based, geology field trips are a common shared experiece that 
+makes up an important part of geology education. The experience of standing beside a cliff face while someone 
+expertly points out the subtle details of the rock formations, contextualizing them within the broader regional 
+geology, and using them as examples to illustrate fundamental geological concepts is a quintessential part of 
+geology education. In fact, there exists an entire genre of books called "roadside geology of ____" that 
+capitalize on the idea of using point locations along a route to build a larger understanding of geological 
+phenomena. The information in these books is often presented in a manner that mirrors the traditional field 
+trip experience.
 
-## Premise
+Usually, someone with deep knowledge of the area is needed to lead these excursions, 
+as they are familiar with the stops along the way and have spent countless hours researching and organizing 
+the information to be delivered at each stop. This includes accounting for the audience's level of knowledge 
+and the time available to deliver the content. However, there are times when such a knowledgeable guide 
+is not available. Perhaps a geologist, or simply someone with an interest in geology, is driving along a road 
+or looking at a map and wishes they had access to information about the local geology and its broader context. 
 
-Although geology education mostly takes place in the classroom, getting out to see rocks outcropping in 
-the real world is a common part of geology training be it in a university or as part of an occupation. 
-Listening to someone speak about the details of the rocks in front of them at the side of a cliff, interpreting 
-their features, putting them into the regional context, or speaking to them as an excellent example of some concept 
-is a core experience shared of geology education. There is an entire collection 
-books called "roadside geology of ____ ", because understanding the geology of point locations across a 
-transit as a way to understand the larger geological picture is a core experience. Information is organized 
-to parallel that experience. 
+> Is it possible to create a bot that can take on at least some of the role of a field trip leader, by 
+finding and presenting relevant geological information to those who seek it?
 
-Of course, to make this experience requires a person knowledgable about the geology of the area, who is already 
-familiar with all the stops as well as many others in the area. This person has likely spent considerable time 
-researching the geology of the area beforehand as well as time organizing the information into content 
-that can be delivered at each stop along the field trip. Available time and knowledge level of the audience is 
-typically taken into account when creating the content to be delivered. Such a person is not always available 
-though. Sometimes a geologist, or anyone interested in geology, is just driving along in their car, riding a 
-train, sitting in a plane, or even not moving and just interested in the geology of one or more points 
-on planet Earth. They wish to know about that local rock on the side of the road and how it fits into the 
-larger regional context.
+As technology continues to improve, with advancements in machine learning and natural language processing, 
+it becomes increasingly plausible to automate information delivery in this way. 
+This document poses the question of whether we are approaching the day when an AI geology professor can 
+at least provide an introductury statement that might be delivered at the beginning of a field trip stop. 
 
-> _Can we create a bot that fullfills to some extent the role of the geology field trip leader, at least in terms of 
-finding and presenting relevant content to those that wish to hear about it?_
-
-As machine learning, natural language processing, and technology in general continue to improve, it starts
-to become more reasonable to think about automating some of this information delivering. This document 
-poses the question of how far we are from having an AI geology professor in the field? It attempts to 
-identify what do large language models make easier that was previously harder to accomplish and what 
-difficult problems remain?
+> This document explores the ways in which large language models make it easier to accomplish certain tasks that were 
+once impossible to do programmatically, while also highlighting the challenges that remain.
 
 ## The context of when was this written
 
-This was written in March of 2023. OpenAI's ChatGPT application and foundational models have created a surge 
-in interest and development activity due to their new natural language processing capabilities. 
+This was written in March of 2023. 
+The tech community has been swept up by a surge of interest and activity, 
+fueled in part by the incredible capabilities of OpenAI's ChatGPT application and its foundational models.
 
-I've previously done some work and side projects in more traditional natural language processing areas. 
-This is my first experiment using pre-built large language models in a side project. Needless to say, I have 
+While, I've previously done some work and side projects in more traditional natural language processing areas, 
+this is my first experiment using pre-built large language models in a side project. Needless to say, I have 
 no idea what I'm doing. There's a high chance I'll look back on this writing in 3-12 months and groan, but for now 
 it is helping me collect my thoughts.
 
@@ -51,10 +44,10 @@ it is helping me collect my thoughts.
 
 ## The user experiences I aim to build
 
-To user experience I'm trying to build is: 
-- The user inputs a latitude and longitude. 
+To user experience I am trying to build is: 
+1. The user inputs a latitude and longitude. 
   - This could be via text input form, it could be through you giving your phone's browswer permission to access your location, or it could be through inputting a city, state, and country name that is then geocoded to a point. In all cases, it is a point location.
-- The user is told a narrative about the geology at that point. 
+2. The user is told a narrative about the geology at that point. 
   - Initially, the idea is the information involved is: 
     - Geology at the surface at that point.
     - Regional context of that local geology. 
@@ -68,7 +61,8 @@ I've previously experimented with this sort of idea in an Observable notebook ca
 
 > I wanted to have something an automated "road-side geology of ___" book that I could turn on from my phone while driving.
 
-This approach uses no large language model or any other type of natural language processing.
+This approach uses no large language model or any other type of natural language processing. It calls a singular API 
+with a point location and parses the data it gets in response.
 
 An observable notebook is a website that holds the code and executes it at the same time. The webpage asks for the user's 
 location via the location API built into every browswer & permission to play sound. Once it has those, it uses the location to call the [Macrostrat API](https://macrostrat.org/), which returns data in a JSON that describes the top two geologic units at that location. This JSON file is parsed by several different JavaScript functions 
@@ -82,7 +76,8 @@ button, it will tell you about the geologic unit at the surface at that location
 #### Limitations of this approach
 
 Upon using this, there are a few limitations that quickly become obvious. First, due to the narrative being one-size fits 
-all and deterministically created from well structured data, it can get kind of boring to hear again and again. Even if the 
+all and deterministically created from well structured data, it can get kind of boring to hear again and again as you 
+drive down the road. Even if the 
 units age and lithology vary, all of the glue words stay the same every single time you try to get information. Second, 
 there is not regional information of contextual information. All you get is what the API gives you, which is lithology, age, and maybe interpreted depositional environment, all data originally extracted from a geologic map.
 

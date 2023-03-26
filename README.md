@@ -276,3 +276,40 @@ The predicted geology near the surface of that point location of is
 If we step out to a regional scale and specifically talking about the regional  structural ors tectonic geology  of  Rogaland  :  
 Preikestolen, or Pulpit Rock, is a 604 metre high cliff located in Rogaland county, Norway. It is composed of a steep cliff face of the Precambrian-age rock of the Folgefonna peninsula. The cliff is a result of tectonic forces that have shaped the landscape over millions of years, and is an example of the folding of the Earth's crust. The cliff is composed of a thick layer of sandstone, which is part of the Devonian-age sandstone formation of the Rogaland Group. The cliff is also an example of the erosion of the Earth's surface, with the cliff face being exposed to the elements over time. The cliff is also an example of the uplift of the Earth's crust, with the cliff face being pushed up by the tectonic forces that have shaped the landscape. The Norwegian authorities have not installed safety devices, as fatalities are rare, and the hike to the top takes around 3-4 hours. The Norwegian authorities have started projects to improve the paths and signs, making it a popular tourist attraction, with around 200,000 visitors a year, and a popular spot for BASE jumpers.
 ```
+
+-------- results 2023-03-24 --------------
+
+##### Oslo Norway
+
+```
+ The point location of:  59.9139 latitude and  10.7522  longitude is located in  Storgata 28, 0184 Oslo, Norway
+The predicted geology near the surface of that point location of is  
+    The top stratigraphic layer at this location is composed of 18% carbonate and is from the Silurian period, 419.2 million years ago. This layer is part of the Precambrian-Phanerozoic sedimentary rocks. The second layer is composed of 7% phyllite, 14% mudstone, and 83% conglomerate and is from the Cambrian period, 538.8 million years ago. This layer is part of the Cambrian phyllite and is an undifferentiated metamorphic rock.
+If we step back and talk about the  regional geologic history  of  Oslo ,  Norway  based on the wikpedia page Geology of Norway :  
+Norway's geologic history dates back to the Precambrian era, when the Iapetus Ocean widened and the Varanger ice age began. During the Devonian, Carboniferous, Permian, Triassic, Jurassic, and Cretaceous periods, continental sediments were exposed in various areas of Norway and on Svalbard. The Late Jurassic period was the main rifting phase in the Central Graben, Viking Graben, More Basin, Vøring Basin, and Barents shelf, which caused the land to split apart. Rifting restarted in the late Cretaceous period and continued through to the early Palaeocene period. This rifting created the fjords and valleys that are characteristic of Norway's landscape today. The Caledonian orogeny, which occurred during the Devonian period, also had a significant impact on Norway's geology. This orogeny caused the formation of mountains and hills, and the folding of the Earth's crust. These geological events have shaped Norway's landscape and geology over millions of years.
+```
+
+##### Port Clinton, Ohio
+
+```
+ The point location of:  41.512 latitude and  -82.9377  longitude is located in  230 E 2nd St, Port Clinton, Ohio 43452, United States
+The predicted geology near the surface of that point location of is  
+    The top two layers at this location are separated by a gap of millions of years. The top layer is 0.0117 million years old and consists of gravel, sand, and clay with a probability of 48.81%, 44.05%, and 7.14%, respectively. The predicted depositional environment is glacial and lacustrine with a probability of 66.67% and 33.33%, respectively. The second layer is 358.9 million years old and consists of shale, sandstone, limestone, and dolomite with a probability of 37.5%, 12.5%, 31.25%, and 18.75%, respectively. The predicted depositional environment is marine and inferred marine with a probability of 6.25% and 93.75%, respectively.
+Created a chunk of size 4084, which is longer than the specified 4000
+If we step back and talk about the  regional geologic history  of  Ohio ,  United States  based on the wikpedia page Geological history of North America :  
+North America's geologic history dates back to the formation of the Earth. During the Paleozoic era, the region was home to a variety of marine life, amphibians, and early reptiles. The Mesozoic era saw the evolution and dominance of dinosaurs until a mass extinction event. The Cenozoic era saw mammals take over the land and the emergence of whales in the coastal waters. During the Paleozoic era, coral reefs, seed-bearing plants, and the supercontinent Pangaea formed. Fossil footprints of giant insects and salamander-like amphibians have been found in various states. This history of North America's geology is a testament to the diversity of life that has existed in the region over millions of years.
+```
+
+##### New York, City
+```
+The point location of:  40.7128 latitude and  -74.006  longitude is located in  39 Park Row, New York, New York 10007, United States
+The predicted geology near the surface of that point location of is  
+    The top two layers at this location are separated by a gap of 0.3761 million years. The top layer is 0.0117 million years old and is composed of 100% sand, with a predicted depositional environment of 50% shoreface and 50% fluvial indeterminate. The second layer is 0.4398 million years old and is composed of 14.29% gravel and 85.72% sand, with a predicted depositional environment of 33.33% estuary/bay, 33.33% outwash plain, and 33.33% lacustrine indeterminate. This layer also has an economic value of sand and gravel for construction materials.
+Created a chunk of size 6149, which is longer than the specified 4000
+Created a chunk of size 4066, which is longer than the specified 4000
+Created a chunk of size 4206, which is longer than the specified 4000
+Created a chunk of size 4042, which is longer than the specified 4000
+Created a chunk of size 4329, which is longer than the specified 4000
+If we step back and talk about the  regional geologic history  of  New York ,  United States  based on the wikpedia page Manhattan :  
+    Manhattan was historically part of the Lenapehoking territory inhabited by the Munsee Lenape and Wappinger tribes. In 1626, Peter Minuit and Walloon colonists of the West India Company acquired the island of Manhattan from native people for traded goods worth 60 guilders. This marked the beginning of the colonization of Manhattan by the Dutch and later the English. The island of Manhattan was an important part of the Lenapehoking territory, which was home to the Munsee Lenape and Wappinger tribes. The tribes had inhabited the area for centuries before the arrival of the Dutch and English colonists. The acquisition of the island of Manhattan by the West India Company in 1626 marked the beginning of the colonization of the area by Europeans. This colonization led to the displacement of the native tribes and the transformation of the island into the cultural, financial, media, and entertainment capital of the world. The island of Manhattan is now home to the world's two largest stock exchanges, the Metropolitan Museum of Art, and the United Nations, and is the most visited tourist destination in the United States.
+```

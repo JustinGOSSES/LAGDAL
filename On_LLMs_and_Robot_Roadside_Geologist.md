@@ -31,16 +31,14 @@ once impossible to do programmatically, while also highlighting the challenges t
 
 ## The context of when was this written
 
-This was written in March of 2023. 
-The tech community has been swept up by a surge of interest and activity, 
-fueled in part by the incredible capabilities of OpenAI's ChatGPT application and its foundational models.
+This was written in March of 2023. There has been a surge of interest and activity in large language models 
+driven by the capabilities of OpenAI's ChatGPT application and foundational models
 
-While, I've previously done some work and side projects in more traditional natural language processing areas, 
+While I've previously done some work and side projects in more traditional natural language processing areas, 
 this is my first experiment using pre-built large language models in a side project. Needless to say, I have 
-no idea what I'm doing. There's a high chance I'll look back on this writing in 3-12 months and groan, but for now 
-it is helping me collect my thoughts.
+no idea what I'm doing. There's a high chance I'll look back on this writing in 3-12 months and groan, but for now it is helping me collect my thoughts.
 
-![Image of a dog at a computer with the words "I have no ideal what I'm doing".](https://i.kym-cdn.com/photos/images/original/000/234/765/b7e.jpg) [RIP Bailey the dog](https://www.reddit.com/r/pics/comments/7oym1s/reddit_you_made_our_dog_semifamous_years_ago_you/)
+![Image of a dog at a computer with the words "I have no ideal what I'm doing".](https://i.kym-cdn.com/photos/images/original/000/234/765/b7e.jpg) [RIP Bailey the "I have no idea what I'm doing" dog](https://www.reddit.com/r/pics/comments/7oym1s/reddit_you_made_our_dog_semifamous_years_ago_you/)
 
 ## The user experiences I aim to build
 
@@ -83,7 +81,8 @@ there is not regional information of contextual information. All you get is what
 
 
 ## The problem of trying to scale creating geological narratives from data APIs.
-Ideally, you'd be able to not just get an individual point location data read back to you in a single construction. You would also get regional geology, historical narrative, information on what is unique, etc. The content you want as 
+Ideally, you'd be able to not just get an individual point location data read back to you in a single construction. 
+You would also get regional geology, historical narrative, information on what is unique, etc. The content you want as 
 narrative could reasonably vary, just like actual field trips. There are a variety of other variations in what information 
 is provided, how it is provided, and how the user interacts with it that quickly start to pile up if you want to make 
 something useful and pleasant to use.
@@ -147,54 +146,192 @@ just LLM approaches.
 
 For more about "agents", "chains", and other concepts, check out the documentation for [Lanchain](https://python.langchain.com/en/latest/) or [Semantic-Kernal](https://devblogs.microsoft.com/semantic-kernel/), two libraries for calling OpenAI-type model APIs.
 
-## Where to get data and what to do with it
+## How does ChatGPT do with single questions:
+
+If asked to "Describe the geology of [insert point coordinate]", it 
+defers as the task is not something it is comfortable doing.
+
+![Screenshot of ChatGPT asking for help](images/ChatGPT_sc_2.png)
+
+If I instead ask it to describe the geology of a well known location, 
+it complies but does so in a way that is not entirely correct. 
+Although there is precambrian bedrock in the area, a geologic map 
+of the area (which you can find [in this research paper](https://www.researchgate.net/profile/Mark-Smethurst/publication/301546802/figure/fig3/AS:359759359299591@1462784723827/Bedrock-geology-map-of-the-Oslo-area-featuring-the-NNE-SSW-Oslo-Rift-with-its-associated.png) or on [Macrostrat](https://macrostrat.org/map/loc/9.9939/59.9634#x=9.754&y=59.995&z=6.7) ) shows there is more recent glacial deposits on top in addition to much older metamorphized 
+sediments.
+
+![Screenshot of ChatGPT asking for help](images/ChatGPT_sc_3.png)
+
+Interestingly, if you use the thumbs down button to let ChatGPT know 
+it is incorrect, it asks how it is incorrect. It then uses that information to suggest an improvement as shown below on the right side.
+
+![Screenshot of ChatGPT asking for help](images/ChatGPT_screencapture_1.png)
+ 
+> Ideally, however, we can get a programmatic answer that is entirely correct. 
+
+One way to possibly do that is to source factual data and then have a LLM model reorganize that information into text that matches your needs.
+
+## Where to get data 
+
+Currently, I am working with two places to source geologic information.
+
+### Bing Geocoding API:
+
+Given that the process I am developing starts with a point location but the information I want to 
+provide include regional context, I need the words to find the appropriate regional names. To get 
+them I use the Bing Maps Geocoding API. Under a certain amount of calls, the geocoding service is free. 
+I provide a latitude and longitude, it returns a street address, including state and country.
+
+### MacroStrat: Well-structured information about a point location
+
+Macrostrat describes itself at "the world's largest homogenized geologic map database". You can find a longer description on their 
+[website](https://macrostrat.org/). We use their API to source 
+geologic data for a point location. One endpoints of their API provides both stratigraphic column information across most of United States of America and Canada. Another endpoint grabs the bedrock geology from large regional and global maps. Where the stratigraphic 
+information exists, that is preferred due to higher resolution information. In addition, it lets you 
+ignore the boring "recent alluvil soil" that sometimes covers the most interesting bedrock geology 
+underneath. 
+
+Although Macrostrat is great as a single API that gets you point location information around the world, 
+it is limited in that it doesn't provide any regional information or geologic history. It just says 
+what types of rock exist at a given point. For that broader type of regional, causual, or 
+historical information, we need to look elsewhere.
+
+### Wikipedia: Semi-structured sources of regional information
+
+One place to get regional geologic information is wikipedia. There are variety of [python packages](https://github.com/goldsmith/Wikipedia) 
+built to call the Wikipedia API. We can use them to search for "Regional geology of [insert location]", 
+get back pages, evaluate the pages by some criteria, and then have a LLM summarize the regional geology 
+into a paragraph instead of however long the Wikipedia page is. 
+
+This approach often works out great as there are many wikipedia pages written about the geology of 
+states, proviences, and countries. For example, [this is a wikipedia page about the Geology of Ohio](https://en.wikipedia.org/wiki/Geology_of_Ohio). It is the first Wikipedia search result for 'Geology of Ohio'.
+
+However, other times the page returned does not describe the geology of the location we're interested in. For example, a search for 
+[Geology of Oslo](https://en.wikipedia.org/wiki/Special:Search?go=Go&search=Geology+of+Oslo&ns0=1) returns back several pages, but 
+nothing that is exactly geology of Oslo Norway. Pages that return are "University of Oslo", "Geology", 
+"Natural History Museum at the University of Oslo", "Oslo Graben", and "Geology of Great Britain".
+
+What is needed to get around this behavior is (1) a method to evaluate the validatity of the search result for our task (2) and a fallback strategy for what to do next. 
+
+### Other unstructured sources of geology information: bing search, literature, etc. 
+
+Other sources of information might be literature or search engine results. 
+I am not currently doing this, 
+but opportunities exist. For example, the Macrostrat map API often provides a way to grab 
+literature references associated with the map. 
+
+## Combining 
 
 
-### Chains
+### Chaining rule-based functions vs. prompt-based functions
 
 
-### Agents
+#### Chains, Agents
 
-
-### Rule-based Functions
-
-
-### Prompt-based Functions
-
-
-### MacroStrat: and other well-structured sources of relevent information
-
-
-### Wikipedia: and other semi-structured sources of relevant information
-
-
-### Bing Search: and other unstructured sources of relevant information
-
-
-
-### Literature 
-
+You can learn more about chains and agents....... INPUT
 
 
 ## Current experiments on part of a weekend
 
+Resuls for  "latitude": 41.512, "longitude": -82.9377:
+
+```
+
+
+        "fullAddress": "230 E 2nd St, Port Clinton, Ohio 43452, United States",
+        
+        "geology_response": "\n    The top two layers at this location are separated by a gap of millions of years. The top layer is 0.0117 million years old and is composed of gravel, sand, and clay in proportions of 48.81%, 44.05%, and 7.14%, respectively. The depositional environment of this layer is glacial and lacustrine in proportions of 66.67% and 33.33%, respectively. The second layer is 358.9 million years old and is composed of shale, sandstone, limestone, and dolomite in proportions of 37.5%, 12.5%, 31.25%, and 18.75%, respectively. The depositional environment of this layer is marine and inferred marine in proportions of 6.25% and 93.75%, respectively.",
+        
+        "regional_geology_subarea": "regional geologic history",
+        
+        "regional_tectonic_geology_response": "\nOhio's geologic history dates back to the Precambrian eon, 
+        when the Grenville Province and Superior Province formed the crystalline basement rock. Subsequent mountain building events such as the Taconic orogeny and Acadian orogeny led to sediment deposition in the Paleozoic Era (539-251 million years ago). This sedimentary rock from the Devonian, Mississippian, Pennsylvanian, and Permian periods has been found, along with some bones and plant fossils from the Pleistocene. Unfortunately, the Pleistocene glaciations erased much of the geologic history, leaving little trace in the Mesozoic and Cenozoic. \n\nOhio's geologic history is quite ancient, stretching back to the Precambrian eon. The Grenville Province and Superior Province formed the crystalline basement rock, and subsequent mountain building events such as the Taconic orogeny and Acadian orogeny led to sediment deposition in the Paleozoic Era. This sedimentary rock from the Devonian, Mississippian, Pennsylvanian, and Permian periods has been found, along with some bones and plant fossils from the Pleistocene. \n\nUnfortunately, the Pleistocene glaciations",
+```
+
+Resuls for latitude = 40.7128 longitude = -74.006 
+
+```
+    {
+        "fullAddress": "39 Park Row, New York, New York 10007, United States",
+
+        "geology_response": "\n    The top two layers at this location are separated by a gap of 0.3761 million years. The top layer is 0.0117 million years old and is composed of 100% sand with a predicted depositional environment of 50% shoreface and 50% fluvial indeterminate. The second layer is 0.4398 million years old and is composed of 14.29% gravel and 85.72% sand with a predicted depositional environment of 33.33% estuary/bay, 33.33% outwash plain, and 33.33% lacustrine indeterminate. This layer also has an economic value of sand and gravel for construction material.",
+
+        "regional_geology_subarea": "regional geologic history",
+        
+        "regional_tectonic_geology_response": "\nNew York's geology is composed of ancient Precambrian crystalline basement rock, sedimentary rocks from the Paleozoic, and fossil-bearing volcanic and sedimentary rocks from the Mesozoic. The Hudson Highlands and Manhattan Prong were deformed and metamorphosed by the Avalonian mountain building event 575 million years ago. During the Paleozoic, New York experienced a marine transgression and the Taconic and Acadian orogenies. The Newark Basin formed during the late Triassic. Rivers were rechanneled or filled with sediment during the Pleistocene glaciations.\n\nNew York's regional geologic history is a long and complex one. It began with the formation of ancient Precambrian crystalline basement rock and sedimentary rocks from the Paleozoic. The Avalonian mountain building event 575 million years ago caused the Hudson Highlands and Manhattan Prong to be deformed and metamorphosed. During the Paleozoic, New York experienced a marine transgression and the Taconic and Acadian orogenies. The Newark Basin formed during the late Triassic. The Pleistocene glaciations caused rivers to be rechanneled or filled with sediment. Cenozoic rocks are rare in New York, but present offshore",
+        "date": "2023-03-27 00:27:13"
+    }
+```
 
 
 ### Learnings from current experiments
 
-TODO
+My experience building the previous experiment leveraging the MacroStrat API in a quick Observable Notebook was 
+that it worked, but the experience was lacking. The content was limited to only a point location and tended to become 
+boring after while. It also led to wanting more context beyond that point. Writing code to create more variable 
+narratives was obviously possible, but the time to do so not minor.
 
-Main benefit is in changing slope of the developer labor vs. product functionality curve.
+> The OpenAI API's ability to reword the data into narratives helps the information be less boring. Additionally, 
+its ability to rephrase and summarize the content opens up the opportunity to use additional information that is not
+structured data from an API but unstructrued data from various sources.
 
+Technically speaking, this was also possible with other methods, but the amount of time it would take to build is 
+substantial for each new feature add. In contrast, getting to the same experience by combinging data APIs, search 
+results, etc. with LLM prompts feels much easier. 
+
+> The slope of labor for functionality is much lower if LLMs are used.
+
+##### How Big a Change in Productivity
+The thing it feels most similar to out my my own experiencesw is the appearance of NASA Worldwind / Google Earth.
+When I started graduate school in 2004, I needed aerial imagery of the area I was going to do field work at later 
+that year. The process at the time involved looking at squares on a map, sending an email to purchase images of that 
+square over several days, and then waiting two weeks for the physical to arrive. You would hope the days you purchased 
+did not have clouds. After I did that once, NASA Worldwind and shortly after Google Earth came out. Instead of 
+waiting two weeks, you could scroll everywhere on the planet and instantly see satellite images of all the locations.
+It was a big enough change that the entire research group was behind a computer calling out new locations to scroll to next.
 
 ## What is still hard
 
-TODO
+What now controls the productivity curve for programmatic descriptions of geology at point X how it fits in the regional 
+context, are two related constraints. 
 
-1. Figuring out what is "good" is hard programmatically and as a human
-2. Limited number of places to pull well structured data or text
+First, can you figure out if the result is reliable enough to use. A prompt can 
+work fine two or ten times before giving an unexpected result on the eleventh. To some extent both prompts and deterministic 
+functions can be used to validate responses. The number of geology terms in a Wikipedia page can help provide a clue to 
+whether that page is a valid result to summarize for the regional geology. However, the wikipedia page for "geology" 
+has a lot of geology terms even though it is not at all what's wanted for the geology of the region around Oslo, Norway. 
+Prompts combined with traditional natural language processing is probably more effective, but creating effective methods 
+requires creativity, and at least initially, a well-informed human looking at the results.
+
+Second, are there enough data APIs and sources of unstructured factual information with the right information for 
+your task? Some states are too small to have a wikipedia page titled "Geology of [insert state]". Other times the 
+state or country boundaries are much less useful than other boundary terminology. What appears to have potential is 
+a combination of functional and prompt-based data requests, validation, rankings, cleaning, and resummarization.
 
 ## What might be in near-future
 
+....... agents ........
+
+
+...... tests .......
+
+
+....... different prompt styles ......
 
 ### Other directions to go besides the give me geology for this point application
+
+outcrop finder...
+
+chat....
+
+
+research paper finder that's insanely more useful..
+
+Danger areas.... search terms that overlap with different content.. need to be specific.
+
+
+User needs time, patients, knowledge, and skill with pure ChatGPT or similar.
+
+
+#### Reminder
+
+I have no idea what I am doing. I do not speak for my employer here.

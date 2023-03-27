@@ -34,10 +34,6 @@ def processWikipediaPage(wikipedia_page):
         "content":content,
         "links":links
     }
-    #print("wikipage_object == ",wikipage_object)
-    # print("wikipage_object == ",type(wikipage_object["content"]))
-    # print("wikipage_object == ",len(wikipage_object["content"]))
-    # print("wikipage_object == ",len(wikipage_object["content"][0:1000]))
     return wikipage_object
 
 
@@ -55,21 +51,37 @@ stratigraphicWordList = ["Bedding", "Stratification", "Lamination", "Cross-beddi
 
 geologyWordList = geologicWordsList + lithologyWordList + ageWordsList + structureWordList + stratigraphicWordList
 
-def goThroughWikipediaPagesContentsAndFindPageWithMostGeo(wikipedia_pages,geologyWordList):
+def goThroughWikipediaPagesContentsAndFindPageWithMostGeo(wikipedia_pages,geologyWordList,stateAndCountry):
     arrayOfPagesObjects = []
     for page in wikipedia_pages:
         wikipedia_page_object = processWikipediaPage(page)
-        words_found = count_words_in_string(geologyWordList,wikipedia_page_object["content"])
-        wordCountsPerPage = {"page":wikipedia_page_object,"word_count":words_found,"page_title":wikipedia_page_object["title"]}
-        arrayOfPagesObjects.append(wordCountsPerPage)
+        if has_geology_of(wikipedia_page_object["title"], stateAndCountry):
+            arrayOfPagesObjects  = [{"page":wikipedia_page_object,"word_count":words_found,"page_title":wikipedia_page_object["title"]}]
+            return arrayOfPagesObjects 
+        else:
+            words_found = count_words_in_string(geologyWordList,wikipedia_page_object["content"])
+            wordCountsPerPage = {"page":wikipedia_page_object,"word_count":words_found,"page_title":wikipedia_page_object["title"]}
+            arrayOfPagesObjects.append(wordCountsPerPage)
     return sorted(arrayOfPagesObjects, key=lambda x: x["word_count"], reverse=True)
 
-def getWikipediaPageAndProcess(subject):
+def getWikipediaPageAndProcess(subject,stateAndCountry):
     #### Get wikipedia pages on a subject
     wikipedia_pages = getWikipediaPagesForX(subject)    
-    sortedListOfPages = goThroughWikipediaPagesContentsAndFindPageWithMostGeo(wikipedia_pages,geologyWordList)
+    sortedListOfPages = goThroughWikipediaPagesContentsAndFindPageWithMostGeo(wikipedia_pages,geologyWordList,stateAndCountry)
     return sortedListOfPages[0]["page"]
-    
+        
+def has_geology_of(title, stateAndCountry):
+    """
+    Checks if "Geology of" is in the given Wikipedia page title.
+
+    Parameters:
+    title (str): The title of the Wikipedia page.
+    location (str): The location string to check against.
+
+    Returns:
+    bool: True if "Geology of" is in the title, False otherwise.
+    """
+    return "Geology of" in title and stateAndCountry["state"] in title
     
 ########## Semantic prompts
 

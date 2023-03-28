@@ -92,6 +92,7 @@ extractContentFromWikipediaPageContent = PromptTemplate(
     --- start wikipedia article ---
     {wikipedia_page_content}
     --- end wikipedia article ---
-    extract the content that has to do with: {subject_to_extract} and summarize it into 8-15 sentences.
+    extract the content that has to do with: {subject_to_extract} and summarize it into 6-10 sentences.
     """
 )
+

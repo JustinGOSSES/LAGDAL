@@ -111,11 +111,19 @@ interesting fossils, gems, or minerals to find?
 ```
 
 ## Required Tooling
+All dependencies are in the requirements.txt file. 
+
+The main top-level dependencies are:
+- langchain
+- open_ai
+- requests
+- wikipedia
 
 ### Needs API Keys
+- [Bing Maps Geocoding API](https://learn.microsoft.com/en-us/bingmaps/rest-services/locations/)
 
 #### OpenAI
-- TODO
+- [OpenAI](https://platform.openai.com/docs/introduction) key as environmental variable
 
 #### Bing Maps API 
 - READ: https://www.microsoft.com/en-us/maps/create-a-bing-maps-key
@@ -129,18 +137,21 @@ Our environment dependencies is set by conda. After adding an environmental vari
 
 ## How to Install
 
+- `git clone https://github.com/JustinGOSSES/LAGDAL.git`
+- `cd LAGDAL`
+- `pip install requirements.txt` or `conda create --name my_project_env && pip install -r requirements.txt`
 
 ## How to Run
-
+- `cd src`
+- `python main.py`
 
 ## Getting Started
 
+To-Do....
 
 ## Contributing
 
-
-
-#### NOTES on how to run...
+To-Do....
 
 
 ## Early Results
@@ -312,4 +323,28 @@ Created a chunk of size 4042, which is longer than the specified 4000
 Created a chunk of size 4329, which is longer than the specified 4000
 If we step back and talk about the  regional geologic history  of  New York ,  United States  based on the wikpedia page Manhattan :  
     Manhattan was historically part of the Lenapehoking territory inhabited by the Munsee Lenape and Wappinger tribes. In 1626, Peter Minuit and Walloon colonists of the West India Company acquired the island of Manhattan from native people for traded goods worth 60 guilders. This marked the beginning of the colonization of Manhattan by the Dutch and later the English. The island of Manhattan was an important part of the Lenapehoking territory, which was home to the Munsee Lenape and Wappinger tribes. The tribes had inhabited the area for centuries before the arrival of the Dutch and English colonists. The acquisition of the island of Manhattan by the West India Company in 1626 marked the beginning of the colonization of the area by Europeans. This colonization led to the displacement of the native tribes and the transformation of the island into the cultural, financial, media, and entertainment capital of the world. The island of Manhattan is now home to the world's two largest stock exchanges, the Metropolitan Museum of Art, and the United Nations, and is the most visited tourist destination in the United States.
+```
+
+### 2023-03-27
+
+##### Houston, Texas - 2023-03-27
+```
+"Greeting my geology 101 students, welcome to our field trip to 903 Bagby St, Houston, Texas 77002, United States! Here, we can observe the geologic history of Texas, which has been shaped by a variety of geological events over millions of years. The top two layers of this area are separated by a gap of 29.525 million years. The top layer is from 0 to 90.825 million years old and is composed of gravel, sand, silt, shale, sandstone, conglomerate, limestone, tuff, and clay, with shale being the most common lithology at 53.99%. The predicted depositional environment is mostly marine, with the most common environment being coastal indet. at 13.56%. The second layer is from 91.8705 to 120.35 million years old and is composed of sand, shale, carbonate, and limestone, with limestone being the most common lithology at 36.51%. The predicted depositional environment is mostly marine, with the most common environment being shallow subtidal at 15.38%. The economic resources in this layer are mostly hydrocarbons, with gas indet. at 66.67% and oil indet. at 33.33%.",
+        "date": "2023-03-27 22:15:45"
+```
+
+##### Yukon, Alaska - 2023-03-27
+```
+  "latitude": 64.881183,
+    
+        "As the professor of Geology 101, I am delighted to introduce the class to the geology of this area. The top two layers here are 0-0.6538 million years old and 61.6-83.6 million years old. The top layer is composed of gravel, sand, silt, and till, each making up 7%, 30%, 58%, and 5% respectively, and is eolian in origin, with dune, loess, fluvial indet., and end moraine each making up 25%. The second layer is composed of sandstone, conglomerate, coal, granite, monzonite, granodiorite, diorite, rhyolite, dacite, and andesite, each making up 7%, 36%, 7%, 3%, 3%, 3%, 3%, 13%, 13%, and 13% respectively, and is marine in origin, with inferred marine making up 100%. Alaska's geologic history is relatively young compared to other parts of North America, with the oldest rocks dating back to the Proterozoic era. During the Mesozoic era, North America separated from the supercontinent Pangea and experienced intense volcanism, leading to the formation of Alaska's mountains. In",
+        "date": "2023-03-27 22:23:54"
+```
+
+##### Yukon, Alaska - 2023-03-27
+
+```
+"Good morning, class. Today we are here to explore the geology of this area. The top two layers of this location are separated by a gap of 22.9 million years. The top layer is 0 to 0.6538 million years old and is composed of gravel, sand, silt, and till in proportions of 7.14%, 29.87%, 58.44%, and 4.54%, respectively. This layer was deposited in a dune, loess, fluvial indet., and end moraine environment in proportions of 25%, 25%, 25%, and 25%, respectively. The second layer is 61.6 to 83.6 million years old and is composed of sandstone, conglomerate, coal, granite, monzonite, granodiorite, diorite, rhyolite, dacite, and andesite in proportions of 7.14%, 35.72%, 7.14%, 2.63%, 2.63%, 2.63%, 2.63%, 13.16%, 13.16%, and 13.16%, respectively. This layer is believed to have been deposited in a marine environment.\n\nAlaska's geology is relatively young compared to other parts of North America, with the oldest",
+        "date": "2023-03-27 22:21:32"
+    },
 ```

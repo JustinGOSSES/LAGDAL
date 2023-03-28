@@ -8,7 +8,9 @@ from langchain.docstore.document import Document
 
 from util import append_experiment_results
 
-from prompts import promptStraightGeology
+from prompts import promptCombineAndRewordInStyle, promptIsThisAbout, promptGeologicalRegions, promptLocationWithinRegions
+
+from prompts import promptDecideIfCountySmall
 
 ### functions functions
 from native_skills.macrostrat.macrostrat import getPointLocationStratColumn, macrostratOnlyReturnFirstTwoLayers, macrostratOnlyReturnFirstLayer, ifNoSurfaceGeology
@@ -19,23 +21,9 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
-#location =  41.5120, -82.9377 (Port Clinton, Ohio, USA)
 
-# ## Stravenger Norway
-# latitude = 58.9700
-# longitude = 5.7331 
-
-### Oslo, Norway
-# latitude = 59.9139
-# longitude = 10.7522
-
-#(Port Clinton, Ohio, USA)
-# latitude = 41.512
-# longitude = -82.9377
-
-# ### New York City, USA
-latitude = 40.7128 
-longitude = -74.006 
+latitude = 64.881183
+longitude = -155.526101 
 
 places = [
     {
@@ -43,6 +31,11 @@ places = [
         "latitude": 40.7128,
         "longitude": -74.006
     },
+    {
+        "name": "Yukon, Alaska",
+        "latitude": 64.881183,
+        "longitude": -155.526101
+    }
     {
         "name": "Oslo, Norway",
         "latitude": 59.9139,
@@ -101,6 +94,7 @@ places = [
 ]
 
 
+
 #### ADDRESS RELATED CODE
 stateAndCountry = getStateAndCountyFromLatLong(latitude,longitude)
 fullAddress = getAddressFromLatLong(latitude,longitude)
@@ -109,10 +103,12 @@ fullAddress = getAddressFromLatLong(latitude,longitude)
 print(" The point location of: ",latitude, "latitude and ",longitude," longitude is located in ",fullAddress)
 
 
-llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
+# llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
+llm = OpenAI(model_name="text-davinci-003",temperature=0.2, max_tokens=256)
+
+
 
 #### GEOLOGY OF A POINT RELATED CODE
-#chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
 
 def macrostratGeologyForLocation(latitude, longitude):
     macrostrat_column_json = getPointLocationStratColumn(latitude,longitude)
@@ -134,32 +130,16 @@ def macrostratGeologyForLocation(latitude, longitude):
     return response
 
 
-# def macrostratGeologyForLocation(latitude, longitude):
-#     macrostrat_column_json = getPointLocationStratColumn(latitude,longitude)
-#     if macrostrat_column_json == "No stratigraphic column data available for this location.":
-#         print("No stratigraphic column data available for this location of: ",latitude,longitude)
-#         macrostrat_column_json = ifNoSurfaceGeology(latitude,longitude)
-#         chainMacroStratWhenNotColum = LLMChain(llm=llm, prompt=macroStratColSummarizationWhenNoColumn)
-#         response = chainMacroStratWhenNotColum.run(macrostrat_column_json)
-        
-#     else:
-#         print("Found a stratigraphic column data available for this location of. ",latitude,longitude)
-#         macrostrat_column_json2 = macrostratOnlyReturnFirstTwoLayers(macrostrat_column_json)
-#         if macrostrat_column_json2 == "No stratigraphic column data available for this location.":
-#             print("No stratigraphic column data available for this location of: ",latitude,longitude)
-#             return macrostrat_column_json2
-#         else:
-#             chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
-#             response = chainMacroStrat.run(macrostrat_column_json2)
-        
-#     return response
-
 geology_response = macrostratGeologyForLocation(latitude, longitude)
 
 print("The predicted geology near the surface of that point location of is ",geology_response)
 
+#### Initiate the chain to check it a subject is in text or not
+checkIfTextAbout = LLMChain(llm=llm, prompt=promptIsThisAbout)
+
 
 #### REGIONAL GEOLOGY RELATED CODE
+
 
 
 chainWiki = LLMChain(llm=llm, prompt=extractContentFromWikipediaPageContent)
@@ -178,7 +158,20 @@ def regionalGeologyOfStateFromWikipedia(stateAndCountry, chainWiki,regional_geol
     summarized_wikipedia = chain.run(docs)
     wikipedia_page_title = wikipedia_page_object["title"]
     response = chainWiki.run({"subject_to_extract":regional_geology_subarea,"wikipedia_page_content":summarized_wikipedia})
-    return {"summary":response,"wikipedia_page_title":wikipedia_page_title}
+    if "No" in checkIfTextAbout.run({"subject":"geology","text":response}) or "No" in checkIfTextAbout.run({"subject":stateAndCountry["country"],"text":response}):
+        ### deferring to direct prompt
+        ### decide if we want to use the prompt for the state or the country
+        sizeOfCountryInKilometers_chain = LLMChain(llm=llm, prompt=promptDecideIfCountySmall)
+        sizeOfCountryInKilometers = sizeOfCountryInKilometers_chain.run(stateAndCountry["country"])
+        if int(sizeOfCountryInKilometers) > 500000:
+            geology_regions_chain = LLMChain(llm=llm, prompt=promptGeologicalRegions)
+            response = geology_regions_chain.run(stateAndCountry["state"])
+        else:
+            response = geology_regions_chain.run(stateAndCountry["country"])
+        return {"summary":response,"wikipedia_page_title":"regional geology areas prompt"}
+        
+    else: 
+        return {"summary":response,"wikipedia_page_title":wikipedia_page_title}
 
 regional_repsonse = regionalGeologyOfStateFromWikipedia(stateAndCountry, chainWiki,regional_geology_subarea)
 regional_tectonic_geology_response = regional_repsonse["summary"] 
@@ -187,8 +180,53 @@ wikipedia_page_title = regional_repsonse["wikipedia_page_title"]
 
 print("If we step back and talk about the ", regional_geology_subarea, " of ",stateAndCountry["state"],", ",stateAndCountry["country"]," based on the wikpedia page", wikipedia_page_title ,": ",regional_repsonse["summary"] )
 
+
+def makeObjectForExperimentResults(latitude,longitude,fullAddress,geology_response,regional_geology_subarea,regional_tectonic_geology_response):
+    experiment_results = {
+        "latitude":latitude,
+        "longitude":longitude,
+        "fullAddress":fullAddress,
+        "geology_response":geology_response,
+        "regional_geology_subarea":regional_geology_subarea,
+        "regional_tectonic_geology_response":regional_tectonic_geology_response
+    }
+    return experiment_results
+
+
+### Style to reword results into
+writerOrWrittingStyle = "Ernest Hemmingway"
+
+styleForRewording = writerOrWrittingStyle + " is a professor teaching a geology 101 field trip and this was his first statement to the class about the geology of this area"
+
+
+def reWordResponseInStyleLLM(writingStyle,responseObject):
+    oneString = ""
+    for string in responseObject:
+        if type(responseObject[string]) == str:
+            oneString = oneString + responseObject[string] + "                    "
+    print("oneString is ",oneString)
+    print("writingStyle is ",writingStyle)
+    ##promptCombineAndRewordInStyleFormatted = promptCombineAndRewordInStyle.format(style=writingStyle, contentJSONIntoString=oneString)
+    ##print("promptCombineAndRewordInStyleFormatted is ",promptCombineAndRewordInStyleFormatted)
+    chainReword = LLMChain(llm=llm, prompt=promptCombineAndRewordInStyle)
+    response = chainReword.run({"style":writingStyle, "contentJSONIntoString":oneString})
+    # print("One string is ",oneString)
+    # rewordChain = LLMChain(llm=llm, prompt=promptCombineAndRewordInStyle)
+    # response = rewordChain.run(oneString)
+    return response
+
+responseObjectWithoutText = makeObjectForExperimentResults(latitude,longitude,fullAddress,geology_response,regional_geology_subarea,regional_tectonic_geology_response)
+
+def rewordExperimentResults(style, responseObjectWithoutText):
+    rewordedResponse = reWordResponseInStyleLLM(style,responseObjectWithoutText)
+    return rewordedResponse
+
+rewordedResponse = rewordExperimentResults(styleForRewording, responseObjectWithoutText)
+    
+### Save results to file    
+    
 filepath = "../experiments/results_of_tests/experiment_results.json"
 
-append_experiment_results(filepath, latitude,longitude,fullAddress,geology_response,regional_geology_subarea,regional_tectonic_geology_response)
+append_experiment_results(filepath, latitude,longitude,fullAddress,geology_response,regional_geology_subarea,regional_tectonic_geology_response,rewordedResponse)
 
 

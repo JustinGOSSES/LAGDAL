@@ -2,7 +2,7 @@ import json
 import os.path
 from datetime import datetime
 
-def append_experiment_results(filepath, latitude, longitude, fullAddress, geology_response, regional_geology_subarea, regional_tectonic_geology_response):
+def append_experiment_results(filepath, latitude, longitude, fullAddress, geology_response, regional_geology_subarea, regional_tectonic_geology_response, rewordedResponse):
     # Define the filename for the JSON file
     
 
@@ -23,6 +23,7 @@ def append_experiment_results(filepath, latitude, longitude, fullAddress, geolog
         "geology_response": geology_response,
         "regional_geology_subarea": regional_geology_subarea,
         "regional_tectonic_geology_response": regional_tectonic_geology_response,
+        "reworded_text": rewordedResponse,
         "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
     data.append(new_experiment_result)
@@ -30,3 +31,4 @@ def append_experiment_results(filepath, latitude, longitude, fullAddress, geolog
     # Save the updated contents back to the file
     with open(filepath, "w") as f:
         json.dump(data, f)
+

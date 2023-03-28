@@ -113,7 +113,6 @@ macroStratColSummarization= PromptTemplate(
     Be sure to:
      - Describe each of the two layers separately and include the words 'top two layers'. 
      - Describe top and bottom ages of each stratigraphic unit in terms of "millions of years".
-     - If there is a gap between the age of the top most and second most layer, describe that gap in terms of "gap of millions of years".
      - Be sure to mention percentage of lithology and depositional enviornment as well as age.
     """
 )

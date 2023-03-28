@@ -22,8 +22,8 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 
-latitude = 64.881183
-longitude = -155.526101 
+latitude = 40.7128
+longitude = -74.006
 
 places = [
     {
@@ -35,7 +35,7 @@ places = [
         "name": "Yukon, Alaska",
         "latitude": 64.881183,
         "longitude": -155.526101
-    }
+    },
     {
         "name": "Oslo, Norway",
         "latitude": 59.9139,

@@ -156,6 +156,9 @@ To-Do....
 
 ## Early Results
 
+Some examples of predictions for lat/longs are below in order they were created.
+
+There are more `experiments/results_of_tests/experiment_results.json`.
 
 #### Calling Macrostrat API and then using deterministic & LLM semantic functions to summarize the JSON data results into an easily readable format
 

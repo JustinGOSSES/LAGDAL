@@ -22,8 +22,15 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 
-latitude = 40.7128
-longitude = -74.006
+latitude = 37.7749
+longitude = -122.4194
+
+### Style to reword results into
+writerOrWrittingStyle = "Plato"  ## Ernest Hemmingway, Agatha Christie, Plato, Mark Twain, A small child with a lolly pop, etc. 
+### Also tried John McPhee but using recent authors seems problematic for the same reason using current artists does.
+
+styleForRewording = writerOrWrittingStyle + " is a professor teaching a geology 101 field trip and this was his first statement to the class about the geology of this area"
+
 
 places = [
     {
@@ -191,12 +198,6 @@ def makeObjectForExperimentResults(latitude,longitude,fullAddress,geology_respon
         "regional_tectonic_geology_response":regional_tectonic_geology_response
     }
     return experiment_results
-
-
-### Style to reword results into
-writerOrWrittingStyle = "Ernest Hemmingway"
-
-styleForRewording = writerOrWrittingStyle + " is a professor teaching a geology 101 field trip and this was his first statement to the class about the geology of this area"
 
 
 def reWordResponseInStyleLLM(writingStyle,responseObject):

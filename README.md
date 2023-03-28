@@ -24,21 +24,10 @@ were on a road, train, or airplane trip.
 
 ### Context & History & Difficulties
 
-
-#### Strengths and weaknesses of Macrostrat API
-
-#### Strengths and weaknesses of Wikipedia Geology of X
-
-#### Strengths and weaknesses of Google or Bing Searches
-
-
-
-## Brainstorming prompts and APIs to use...
-
+A draft blog post is at `On_LLMs_and_Robot_Roadside_Geologist.md`
 
 ## Skills
 The following outline of potential semantic skills and deterministic functions are what is imagined might be necessary.
-
 
 ### Macrostrat
 Data for a given lat/long and either at surface, 2nd layer down, or strat column going downwards.
@@ -79,12 +68,6 @@ Data for a given lat/long and either at surface, 2nd layer down, or strat column
 - Given text X summarize down to ___ size.
 - Given text X extract the part of the text that is about ____ if it exists.
 - Given this JSON of strings and numbers and objectst that contain strings and numbers, reword it into a paragraph. Important context of the meaning of the keys is _____. 
-
-### Google Search
-
-
-### Bing Search Chat
-
 
 ## Narrative Goals
 

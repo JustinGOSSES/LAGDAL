@@ -24,7 +24,7 @@ were on a road, train, or airplane trip.
 
 ### Context & History & Difficulties
 
-A draft blog post is at `On_LLMs_and_Robot_Roadside_Geologist.md`
+A draft blog post is at [On_LLMs_and_Robot_Roadside_Geologist.md](https://github.com/JustinGOSSES/LAGDAL/blob/main/On_LLMs_and_Robot_Roadside_Geologist.md)
 
 ## Skills
 The following outline of potential semantic skills and deterministic functions are what is imagined might be necessary.

@@ -130,7 +130,7 @@ Our environment dependencies is set by conda. After adding an environmental vari
 
 ## Getting Started
 
-To-Do....
+This is a very hacky weekend project, so there's currently no docs or instructions. Think of it as a proof-of-concept. 
 
 ## Contributing
 

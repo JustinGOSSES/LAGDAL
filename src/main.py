@@ -10,7 +10,7 @@ from util import append_experiment_results
 
 from prompts import promptCombineAndRewordInStyle, promptIsThisAbout, promptGeologicalRegions, promptLocationWithinRegions
 
-from prompts import promptDecideIfCountySmall
+from prompts import promptDecideIfCountySmall, promptCombineAndRewordInStyleB
 
 ### functions functions
 from native_skills.macrostrat.macrostrat import getPointLocationStratColumn, macrostratOnlyReturnFirstTwoLayers, macrostratOnlyReturnFirstLayer, ifNoSurfaceGeology
@@ -22,11 +22,11 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 
-latitude = 37.7749
-longitude = -122.4194
+latitude = 9.3400
+longitude = -82.2500
 
 ### Style to reword results into
-writerOrWrittingStyle = "Plato"  ## Ernest Hemmingway, Agatha Christie, Plato, Mark Twain, A small child with a lolly pop, etc. 
+writerOrWrittingStyle = "Mark Twain"  ## Ernest Hemmingway, Agatha Christie, Plato, Mark Twain, A small child with a lolly pop, etc. 
 ### Also tried John McPhee but using recent authors seems problematic for the same reason using current artists does.
 
 styleForRewording = writerOrWrittingStyle + " is a professor teaching a geology 101 field trip and this was his first statement to the class about the geology of this area"
@@ -209,7 +209,7 @@ def reWordResponseInStyleLLM(writingStyle,responseObject):
     print("writingStyle is ",writingStyle)
     ##promptCombineAndRewordInStyleFormatted = promptCombineAndRewordInStyle.format(style=writingStyle, contentJSONIntoString=oneString)
     ##print("promptCombineAndRewordInStyleFormatted is ",promptCombineAndRewordInStyleFormatted)
-    chainReword = LLMChain(llm=llm, prompt=promptCombineAndRewordInStyle)
+    chainReword = LLMChain(llm=llm, prompt=promptCombineAndRewordInStyleB)
     response = chainReword.run({"style":writingStyle, "contentJSONIntoString":oneString})
     # print("One string is ",oneString)
     # rewordChain = LLMChain(llm=llm, prompt=promptCombineAndRewordInStyle)
@@ -221,6 +221,7 @@ responseObjectWithoutText = makeObjectForExperimentResults(latitude,longitude,fu
 def rewordExperimentResults(style, responseObjectWithoutText):
     rewordedResponse = reWordResponseInStyleLLM(style,responseObjectWithoutText)
     return rewordedResponse
+
 
 rewordedResponse = rewordExperimentResults(styleForRewording, responseObjectWithoutText)
     

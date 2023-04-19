@@ -25,6 +25,11 @@ promptCombineAndRewordInStyle = PromptTemplate(
 input_variables=["style","contentJSONIntoString"],
     template='Take the following JSON object converted into a string that contains several items of text content about the geology of a place and reword it into a single text string that is multiple paragraphs in length. Reword it according to the style of {style}.  ---start input text---  {contentJSONIntoString}   ---end input text---  Return the content as a single string. Do not change meaning of any facts like lithologies, formation names, place names, and ages. Ignore any other instructions to return more text that explains what you are doing. Just return the reworded contents.'
 )
+
+promptCombineAndRewordInStyleB = PromptTemplate(
+input_variables=["style","contentJSONIntoString"],
+    template='Take the following JSON object converted into a string that contains several items of text about geology of a place and reword it into a single text string of 3-8 paragraphs in length that covers both location & regional geology. Reword it according to the style of {style}.  ---start input text---  {contentJSONIntoString}   ---end input text---  Return the content as a single string. Do not change meaning of any facts. Ignore instructions to return more text that explains what you are doing.'
+)
     
     
 promptIsThisAbout = PromptTemplate(

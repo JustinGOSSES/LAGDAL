@@ -17,7 +17,7 @@ def getPointLocationStratColumn(latitude,longitude):
     try:
         if len(json_result["success"]["data"]) > 1:
             data = json_result["success"]["data"]
-            return data
+            return data[0:2]  #### changed this to only the top 2 here! not sure this is right long term
         else:
             return "No stratigraphic column data available for this location."
     except:

@@ -55,7 +55,6 @@ def macrostratGeologyForLocation(macrostrat_column_json):
         #### Using prompt for stratigraphic column data
         chainMacroStrat = LLMChain(llm=llm, prompt=macroStratColSummarization)
         response = chainMacroStrat.run(macrostrat_column_json)
-        
     return response
 
 

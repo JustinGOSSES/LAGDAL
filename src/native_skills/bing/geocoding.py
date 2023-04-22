@@ -28,7 +28,6 @@ def getLocationDetailsFromPointCoordinates(latitude, longitude):
     if status != 200:
         return "Error: " + str(status)
     
-    
 
 #city or neighborhood
 def getAdminDistrctFromResultObject(resultObj):
@@ -67,3 +66,16 @@ extractCityFromStreetAddress = PromptTemplate(
 )
 
 
+def getPointLocationFromCityStateAndCounty(city="",state="",country=""):
+    #### Get a point location from a city, state, and country in lat/long
+    #### using the bing maps API
+    key = os.environ.get('BING_MAPS_KEY')
+    url = "http://dev.virtualearth.net/REST/v1/Locations/" + str(city) + "," + str(state) + "," + str(country) + "?i&verboseplacenames=true&key=" + str(key)
+    r = requests.get(url, auth=('user', 'pass'))
+    status = r.status_code
+    if status == 200:
+        result = r.json()
+        resultObj = result["resourceSets"][0]["resources"][0]
+        return resultObj
+    if status != 200:
+        return "Error: " + str(status)

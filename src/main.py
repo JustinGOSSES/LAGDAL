@@ -22,8 +22,8 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 
-latitude = 9.3400
-longitude = -82.2500
+latitude = 59.9139
+longitude = 10.7522
 
 ### Style to reword results into
 writerOrWrittingStyle = "Mark Twain"  ## Ernest Hemmingway, Agatha Christie, Plato, Mark Twain, A small child with a lolly pop, etc. 

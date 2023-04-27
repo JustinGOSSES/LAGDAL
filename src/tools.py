@@ -1,6 +1,11 @@
 from langchain import LLMMathChain, SerpAPIWrapper
 from langchain.agents import AgentType, Tool, initialize_agent, tool
 from langchain.chat_models import ChatOpenAI
+from langchain.schema import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage
+)
 from langchain.tools import BaseTool
 
 from langchain.chains import LLMChain
@@ -11,6 +16,7 @@ from langchain.chains.mapreduce import MapReduceChain
 from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 
+# import openai as openaiNotLC
 
 from util import append_experiment_results
 
@@ -37,7 +43,21 @@ llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
 
 llm_math_chain = LLMMathChain(llm=llm, verbose=True)
 
+# llm_4a = OpenAI(model_name="gpt-4",temperature=0.2, max_tokens=4096)
 
+chat = ChatOpenAI(model_name="gpt-3.5-turbo",temperature=0)
+
+def callChatGPT4(inputString:str):
+    request = "What is the geologic story around "+inputString+" ? Break it down by time period and keep it under 12 sentences."
+    print('chatGPT request is',request)
+    messages = [
+    SystemMessage(content="You are a helpful assistant that summarizes regional geology."),
+    HumanMessage(content=request)
+    ]
+    completion = chat(messages)
+    #completion = openaiNotLC.ChatCompletion.create( model="gpt-4", messages=[{"role": "user", "content": "What is the geologic story around  Estes Park, Colorado USA ? Break it down by time period and keep it under 12 sentences."} ] ) 
+    print(completion)
+    return completion
 
 #### from main
 # from main import macrostratGeologyForLocation
@@ -172,18 +192,18 @@ tools.append(
         """
     )
 )
-tools.append(
-    Tool(
-        name="find-regional-geology-of-state-using-wikipedia",
-        func=regionalGeologyOfStateFromWikipedia,
-        description="""
-        Useful for finding the regional geology of a geographic area using wikipedia.
-        The input to this tool should be a comma separated list of strings 
-        It should contain state, country, and the string 'regional geologic history'. 
-        For example, `"Texas", "United States of America", "regional geologic history"`.
-        """
-    )
-)
+# tools.append(
+#     Tool(
+#         name="find-regional-geology-of-state-using-wikipedia",
+#         func=regionalGeologyOfStateFromWikipedia,
+#         description="""
+#         Useful for finding the regional geology of a geographic area using wikipedia.
+#         The input to this tool should be a comma separated list of strings 
+#         It should contain state, country, and the string 'regional geologic history'. 
+#         For example, `"Texas", "United States of America", "regional geologic history"`.
+#         """
+#     )
+# )
 tools.append(
     Tool(
         name="Macrostrat-Geology-For-Location",
@@ -204,6 +224,17 @@ tools.append(
         The input to this tool should be a comma separated list of strings 
         It should contain city, state, and country'. 
         For example, `"Houston, Texas, United States of America"`.
+        """
+    )
+)
+tools.append(
+    Tool(
+        name="get-regional-geology-from-chatGPT4",
+        func=callChatGPT4,
+        description="""
+        Useful for finding the regional geology of an area. Better than wikipedia.
+        The input to this tool should be a single string describing the location. It can be a city, state, and country or a latitude and longitude if not near a city.
+        For example, `"Houston, Texas, United States of America"` or `Oslo, Norway` or if not near a city than a latitude and longitude such as `40.7128,-74.0060` of `51.36° N, 91.62° W`.
         """
     )
 )
@@ -258,7 +289,8 @@ agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION
 #           """)
 
 agent.run("""
-          Tell me the geology Estes Park, Colorado, United States
-          and how the local geology fits into regional geologic story
+          Tell me the geology of Port Clinton, Ohio, USA
+          Be sure to explain how the local geology fits into regional geologic narrative.
+          Say at least 10 to 20 sentences.
           """)
 ## Try to add memory: https://python.langchain.com/en/latest/modules/memory/examples/agent_with_memory.html

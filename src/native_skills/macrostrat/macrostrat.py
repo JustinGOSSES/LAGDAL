@@ -57,7 +57,7 @@ def jsonToText(macrostrat_column_json):
 
 macroStratColSummarizationTop = PromptTemplate(
     input_variables=["macrostrat_column_json"],
-    template="Given the following macrostrat stratigraphic column information in JSON format:  {macrostrat_column_json}  Summarize the geology of the location in a paragraph of text with a focus on the top most stratigraphic unit closest to the surface."
+    template="Given the following macrostrat stratigraphic column information in JSON format:  {macrostrat_column_json}  Summarize the geology in a paragraph of text with a focus on the top most stratigraphic unit closest to the surface. Skip anything with zero thickness"
 )
 
 macroStratColSummarizationSecondMostLayer = PromptTemplate(

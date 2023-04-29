@@ -49,7 +49,7 @@ chat = ChatOpenAI(model_name="gpt-3.5-turbo",temperature=0)
 
 def callChatGPT4(inputString:str):
     location, yearsOld = inputString.split("|")
-    request = "What is the geologic story around "+location+" ? Be sure to mention the rocks around "+yearsOld+" million years old. Break it down by time period and keep it under 12 sentences."
+    request = "What is the geologic story around "+location+" ? Be sure to discuss the rocks around "+yearsOld+" million years old. Break it down by time period and < 9 sentences."
     print('chatGPT request is',request)
     messages = [
     SystemMessage(content="You are a helpful assistant that summarizes regional geology at the side of the road."),
@@ -328,10 +328,14 @@ def goAgent(agent_prompt_string,location):
     append_experiment_results_agent_version(filepath, answerObject)
     return answerObject
   
+# agent_prompt_string = """
+#           Tell me the geology of _______
+#           Tell me how the uppermost geology at that specific location fits into regional geology story.
+#           Say at least 10 to 18 full sentences.
+#           """
+
 agent_prompt_string = """
-          Tell me the geology of _______
-          Tell me how the uppermost geology at that specific location fits into regional geology story.
-          Say at least 8 to 20 sentences.
+          Tell me how the uppermost geology at the point location of _______ fits into regional geology story in 10-18 full sentences.
           """
           
 filepath = "../experiments/results_of_tests/experiment_results_agent.json"  

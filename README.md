@@ -130,6 +130,14 @@ Our environment dependencies is set by conda. After adding an environmental vari
 - `cd src`
 - `python main.py`
 
+or 
+
+- `cd src`
+- `python agentA.py`
+
+The first approach uses a fixed chain of prompts & APIs. The second approach uses an agent that decides which "tools" to 
+call where each "tool" is a prompt or a deterministic API call.
+
 ## Getting Started
 
 This is a very hacky weekend project, so there's currently no docs or instructions. Think of it as a proof-of-concept. 

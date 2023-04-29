@@ -18,7 +18,7 @@ from langchain.docstore.document import Document
 
 # import openai as openaiNotLC
 
-from util import append_experiment_results
+from util import append_experiment_results_agent_version
 
 from prompts import promptCombineAndRewordInStyle, promptIsThisAbout, promptGeologicalRegions, promptLocationWithinRegions
 
@@ -48,10 +48,11 @@ llm_math_chain = LLMMathChain(llm=llm, verbose=True)
 chat = ChatOpenAI(model_name="gpt-3.5-turbo",temperature=0)
 
 def callChatGPT4(inputString:str):
-    request = "What is the geologic story around "+inputString+" ? Break it down by time period and keep it under 12 sentences."
+    location, yearsOld = inputString.split("|")
+    request = "What is the geologic story around "+location+" ? Be sure to mention the rocks around "+yearsOld+" million years old. Break it down by time period and keep it under 12 sentences."
     print('chatGPT request is',request)
     messages = [
-    SystemMessage(content="You are a helpful assistant that summarizes regional geology."),
+    SystemMessage(content="You are a helpful assistant that summarizes regional geology at the side of the road."),
     HumanMessage(content=request)
     ]
     completion = chat(messages)
@@ -59,22 +60,31 @@ def callChatGPT4(inputString:str):
     print(completion)
     return completion
 
-#### from main
-# from main import macrostratGeologyForLocation
 
 def getPointLocationFromCityStateAndCountyMod(inputString:str):
-    city, state, country = inputString.split(",")
-    response_object = getPointLocationFromCityStateAndCounty(city, state, country)
+    try: 
+        city, state, country = inputString.split(",")
+        response_object = getPointLocationFromCityStateAndCounty(city, state, country)
+    except: 
+        try:
+            arrayOfStrings = inputString.split(",")
+            city = arrayOfStrings[-2]
+            state = city
+            country = arrayOfStrings[-1]
+            response_object = getPointLocationFromCityStateAndCounty(city, state, country)
+        except:
+            response_object = getPointLocationFromCityStateAndCounty(city, country)
     return response_object
 
 def getMacroStratAPIBasic(latLong:str):
     a, b = latLong.split(",")
     macrostrat_column_json  = getPointLocationStratColumn(float(a),float(b))
-    #return macrostrat_column_json
-    return macrostratGeologyForLocationMod(macrostrat_column_json)
+    latitude = float(a)
+    longitude = float(b)
+    return macrostratGeologyForLocationMod(macrostrat_column_json,latitude,longitude)
                                 
 
-def macrostratGeologyForLocationMod(macrostrat_column_json):
+def macrostratGeologyForLocationMod(macrostrat_column_json,latitude,longitude):
     # macrostrat_column_json = getPointLocationStratColumn(latitude,longitude)
     if macrostrat_column_json == "No stratigraphic column data available for this location.":
         #print("No stratigraphic column data available for this location of: ",latitude,longitude, " so we will try to get surface geology data.")
@@ -175,7 +185,7 @@ tools.append(
         name="get-state-country-from-lat-long",
         func=getStateAndCountyFromLatLong,
         description="""
-        Useful for finding the state and county for a given point location defined by latitude and longitude.
+        Useful for finding the state and country for a given point location defined by latitude and longitude.
         The input to this tool should be a comma separated list of numbers of length two,representing latitude and longitude. 
         For example, `40.7128,-74.0060` would be the input for a location at latitude 40.7128 and longitude -74.0060
         """,
@@ -186,7 +196,7 @@ tools.append(
         name="get-street-address-from-lat-long",
         func=getPointLocationFromCityStateAndCountyMod,
         description="""
-        Useful for finding the street address for a given point location defined by latitude and longitude.
+        Useful for finding the street address include state and country for a given point location defined by latitude and longitude.
         The input to this tool should be a comma separated list of strings representing city, state, and country. 
         For example, "Houston, Texas, USA""
         """
@@ -209,7 +219,7 @@ tools.append(
         name="Macrostrat-Geology-For-Location",
         func=getMacroStratAPIBasic,
         description="""
-        Useful for finding a description the top two layers of the stratigraphic column for a given point location.
+        Useful for finding the uppermost bedrock geology at a given point location in latitude and longitude
         The input to this tool should be a comma separated list of numbers of length two,representing latitude and longitude. 
         For example, `40.7128,-74.0060` would be the input for a location at latitude 40.7128 and longitude -74.0060
         """,
@@ -232,9 +242,11 @@ tools.append(
         name="get-regional-geology-from-chatGPT4",
         func=callChatGPT4,
         description="""
-        Useful for finding the regional geology of an area. Better than wikipedia.
-        The input to this tool should be a single string describing the location. It can be a city, state, and country or a latitude and longitude if not near a city.
-        For example, `"Houston, Texas, United States of America"` or `Oslo, Norway` or if not near a city than a latitude and longitude such as `40.7128,-74.0060` of `51.36° N, 91.62° W`.
+        The best way to find the regional geology of an area. Should call after finding local geology.
+        The input to this tool should be a | separated list of strings of length 2.
+        The first string should describe the location. It can be a city, state, and country or a latitude and longitude if not near a city. For example, `"Houston, Texas, USA"` or `"Oslo, Norway"` or `"51.36° N, 91.62° W"`.
+        The second string should describe the age of the younger geology in millions of years. For example, "0-0.5" or "10-65"
+        The full input should look like "Houston, Texas, USA | 0-10 ".
         """
     )
 )
@@ -288,9 +300,49 @@ agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION
 #           Tell me at least 15 to 30 sentences.
 #           """)
 
-agent.run("""
-          Tell me the geology of Port Clinton, Ohio, USA
-          Be sure to explain how the local geology fits into regional geologic narrative.
-          Say at least 10 to 20 sentences.
-          """)
+# agent.run("""
+#           Tell me the geology of Port Clinton, Ohio, USA
+#           Tell me how the uppermost geology at that specific location fits into regional geology story.
+#           Say at least 8 to 20 sentences.
+#           """)
+
+# agent.run("""
+#           Tell me the geology of Houston, Texas, USA
+#           Tell me how the uppermost geology at that specific location fits into regional geology story.
+#           Say at least 8 to 20 sentences.
+#           """)
 ## Try to add memory: https://python.langchain.com/en/latest/modules/memory/examples/agent_with_memory.html
+
+
+
+def runAgent(agent_prompt_string,location):
+    if location != "default":
+        adjusted_agent_prompt_string = agent_prompt_string.replace("_______",location)
+    else:
+        adjusted_agent_prompt_string = agent_prompt_string.replace("_______","Houston, Texas, USA")
+    geology_response = agent.run(adjusted_agent_prompt_string)
+    return {"adjusted_agent_prompt_string":adjusted_agent_prompt_string, "location":location, "geology_response":geology_response}
+
+def goAgent(agent_prompt_string,location):
+    answerObject = runAgent(agent_prompt_string,location)
+    append_experiment_results_agent_version(filepath, answerObject)
+    return answerObject
+  
+agent_prompt_string = """
+          Tell me the geology of _______
+          Tell me how the uppermost geology at that specific location fits into regional geology story.
+          Say at least 8 to 20 sentences.
+          """
+          
+filepath = "../experiments/results_of_tests/experiment_results_agent.json"  
+
+import sys
+
+argOne = sys.argv[1]
+
+if argOne:
+    print("argOne = ",argOne)
+else: 
+    argOne = "Houston, Texas, USA"
+goAgent(agent_prompt_string,location=argOne)
+    

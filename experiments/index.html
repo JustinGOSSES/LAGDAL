@@ -1,0 +1,68 @@
+<html>
+<head>
+    <title>Experiments</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<!-- //<body></body> -->
+<!-- HTML page that loads a JSON and displays it on the page-->
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>Experiments</h1>
+        </div>
+        <div id="content">
+            <div>
+                <h2 id="experiments">Experiments</h2>
+                <ul id="experiment-list">
+                </ul>
+            </div>
+            <div id="experiment">
+                <h3>Runs</h3>
+                <div id="experiment-content">
+                
+                </div>
+            </div>
+        </div>
+        <div id="footer">
+            <p>Footer</p>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+<script>
+    /// JavaScript that loads the JSON and displays it on the page
+    /// Will load from results_of_tests/experiment_results_agent.json
+    const url_main = "results_of_tests/experiment_results_main.json"
+    const url_agent = "results_of_tests/experiment_results_agent.json"
+
+    fetch(url_agent)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            const experimentList = document.getElementById("experiments")
+            experimentList.innerHTML = "agentA experiments"
+            for (let i = 0; i < data.length; i++) {
+                    const experimentContentTop = document.getElementById("experiment-content")
+                    experimentDiv =  document.createElement("div")
+                    experimentContentTop.appendChild(experimentDiv) 
+                    
+                    const experimentTitle = document.createElement("h3")
+                    experimentTitle.innerHTML = data[i]["location"]
+                    experimentDiv.appendChild(experimentTitle)
+
+                    
+                    const experimentDescriptionElement = document.createElement("p")
+                    experimentDescriptionElement.innerHTML = "RESPONSE:  "+data[i]["geology_response"]
+                    experimentDiv.appendChild(experimentDescriptionElement)
+
+                    const experimentResultsElement = document.createElement("p")
+                    experimentResultsElement.innerHTML = "PROMPT STRING:"+data[i]["adjusted_agent_prompt_string"]
+                    experimentDiv.appendChild(experimentResultsElement)
+                    
+                    const experimentResultsElementDate = document.createElement("p")
+                    experimentResultsElementDate.innerHTML = data[i]["date"]
+                    experimentDiv.appendChild(experimentResultsElementDate)
+                }
+            })
+</script>
+</html>

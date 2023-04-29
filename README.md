@@ -5,6 +5,8 @@ LLM Assisted Geology Descriptions of Arbitrary Locations = LAGDAL
 
 This is currently an experiment on the weekends when I have a little time type of thing.
 
+*Update: latest experiments with agent can be found here: https://justingosses.github.io/LAGDAL/experiments/ *
+
 ### Purpose
 The purpose of this project is to see to what degree a description of the local geology like what you might hear 
 on a geology field trip stop could be programmatically generated. 
@@ -138,6 +140,12 @@ To-Do....
 
 
 ## Early Results
+
+*Update: latest experiments using an agent instead of just a chain can be found here: https://justingosses.github.io/LAGDAL/experiments/ *
+
+Results at the link above are using agentA.py
+
+#### Results below using main.py
 
 Some examples of predictions for lat/longs are below in order they were created.
 

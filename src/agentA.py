@@ -39,17 +39,18 @@ from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extrac
 # llm = OpenAI(model_name="text-davinci-003",temperature=0.2,max_tokens=4096) ### does not work as too short!
 #llm = OpenAI(model_name="gpt-3.5-turbo",temperature=0.2) ### can only do chat? not text?
 # llm = OpenAI(model_name="gpt-4",temperature=0.2, max_tokens=4096)
-llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
+llm = OpenAI(model_name="text-davinci-003",temperature=0.0)
 
 llm_math_chain = LLMMathChain(llm=llm, verbose=True)
 
 # llm_4a = OpenAI(model_name="gpt-4",temperature=0.2, max_tokens=4096)
 
 chat = ChatOpenAI(model_name="gpt-3.5-turbo",temperature=0)
+chatLong = ChatOpenAI(model_name="gpt-4",temperature=0)
 
 def callChatGPT4(inputString:str):
     location, yearsOld = inputString.split("|")
-    request = "What is the geologic story around "+location+" ? Be sure to discuss the rocks around "+yearsOld+" million years old. Break it down by time period and < 9 sentences."
+    request = "What is the geologic story around "+location+" ? Be sure to discuss the youngest uppermost rocks around "+yearsOld+" million years old. Break it down by time period and < 9 sentences."
     print('chatGPT request is',request)
     messages = [
     SystemMessage(content="You are a helpful assistant that summarizes regional geology at the side of the road."),
@@ -60,6 +61,26 @@ def callChatGPT4(inputString:str):
     print(completion)
     return completion
 
+def callChatGPTSummary(inputString:str):
+    location, local_geology, regional_geology = inputString.split("|")
+    request = """
+        Combine the following information into a summary of how the local point geology fits into regional geology picture for """+location+""" 
+        --- start uppermost local point geology ---
+        """+local_geology+"""
+        --- end local geology --- 
+        --- start regional geology ---
+        """+regional_geology+"""
+        --- end regional geology --- 
+        """
+    print('callChatGPTSummary request is',request)
+    messages = [
+    SystemMessage(content="You are a helpful assistant that summarizes regional geology at the side of the road."),
+    HumanMessage(content=request)
+    ]
+    completion = chatLong(messages)
+    #completion = openaiNotLC.ChatCompletion.create( model="gpt-4", messages=[{"role": "user", "content": "What is the geologic story around  Estes Park, Colorado USA ? Break it down by time period and keep it under 12 sentences."} ] ) 
+    print(completion)
+    return completion
 
 def getPointLocationFromCityStateAndCountyMod(inputString:str):
     try: 
@@ -250,6 +271,20 @@ tools.append(
         """
     )
 )
+# tools.append(
+#     Tool(
+#         name="get-summary-local-regional-geology-from-chatGPT4",
+#         func=callChatGPTSummary,
+#         description="""
+#         Useful when summarizing local & regional geology into one paragraph. 
+#         Should only call after finding local geology & regional geology via other tools!
+#         The input to this tool should be a | separated list of strings of length 3.
+#         The first string should describe the location. It can be a city, state, and country or a latitude and longitude if not near a city. For example, `"Houston, Texas, USA"` or `"51.36° N, 91.62° W"`.
+#         The second string should describe the uppermost bedrock geology at a given point location . The third string describes regional geology from the get-regional-geology-from-chatGPT4 tool.
+#         The full input should look like "Houston, Texas, USA | words about uppermost geology | words about regional geology ".
+#         """
+#     )
+# )
 
 
 agent = initialize_agent(tools, llm, agent=AgentType.ZERO_SHOT_REACT_DESCRIPTION, verbose=True)
@@ -334,8 +369,12 @@ def goAgent(agent_prompt_string,location):
 #           Say at least 10 to 18 full sentences.
 #           """
 
+# agent_prompt_string = """
+#           As a professor leading a field trip, describe how the youngest uppermost geology at the point location of _______ fits into regional geology story.
+#           """
+
 agent_prompt_string = """
-          Tell me how the uppermost geology at the point location of _______ fits into regional geology story in 10-18 full sentences.
+          As a professor leading a field trip, describe how the surface geology at the point location of _______ fits into regional geology story.
           """
           
 filepath = "../experiments/results_of_tests/experiment_results_agent.json"  

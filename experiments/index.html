@@ -13,8 +13,11 @@
         <div id="content">
             <div>
                 <h2 id="experiments">Experiments</h2>
+                <!-- drop down list of options goes below-->
                 <ul id="experiment-list">
+
                 </ul>
+
             </div>
             <div id="experiment">
                 <h3>Runs</h3>
@@ -32,15 +35,45 @@
 <script>
     /// JavaScript that loads the JSON and displays it on the page
     /// Will load from results_of_tests/experiment_results_agent.json
-    const url_main = "results_of_tests/experiment_results_main.json"
+    const url_main = "results_of_tests/experiment_results.json"
     const url_agent = "results_of_tests/experiment_results_agent.json"
+    const url_agentB = "results_of_tests/experiment_results_agentB.json"
+    const url_agentC = "results_of_tests/experiment_results_agentC.json"
+    const list_of_urls = [url_main, url_agent, url_agentB, url_agentC]
+    const experiments_list_ul = document.getElementById("experiment-list")
 
-    fetch(url_agent)
+    function changeExperiment(url) {
+        console.log("changeExperiment",url)
+        const experimentList = document.getElementById("experiments")
+        experimentList.innerHTML = url.replace("results_of_tests/","")
+        loadData(url)
+    }
+
+    for (let i = 0; i < list_of_urls.length; i++) {
+        newLI = document.createElement("button")
+        newLI.innerHTML = list_of_urls[i].replace("results_of_tests/","")
+        newLI.value = list_of_urls[i]
+        newLI.class="dropdown-item"
+        newLI.type="button"
+        newLI.onclick = changeExperiment(list_of_urls[i])
+        newLI.onclick= function() {
+            changeExperiment(list_of_urls[i])
+            //console.log('You clicked ' + list_of_urls[i].replace("results_of_tests/",""))
+            //const experimentList = document.getElementById("experiments")
+            //experimentList.innerHTML = list_of_urls[i].replace("results_of_tests/","")
+        };
+        experiments_list_ul.appendChild(newLI)
+    }
+    
+    function loadData(url_to_data){
+        fetch(url_to_data)
         .then(response => response.json())
         .then(data => {
             console.log(data)
             const experimentList = document.getElementById("experiments")
-            experimentList.innerHTML = "agentA experiments"
+            experimentList.innerHTML = url_to_data.replace("results_of_tests/","")
+            const experimentContentTop = document.getElementById("experiment-content")
+            experimentContentTop.innerHTML = "";
             for (let i = 0; i < data.length; i++) {
                     const experimentContentTop = document.getElementById("experiment-content")
                     experimentDiv =  document.createElement("div")
@@ -49,7 +82,6 @@
                     const experimentTitle = document.createElement("h3")
                     experimentTitle.innerHTML = data[i]["location"]
                     experimentDiv.appendChild(experimentTitle)
-
                     
                     const experimentDescriptionElement = document.createElement("p")
                     experimentDescriptionElement.innerHTML = "RESPONSE:  "+data[i]["geology_response"]
@@ -64,5 +96,11 @@
                     experimentDiv.appendChild(experimentResultsElementDate)
                 }
             })
+
+    }
+    
+    window.onload = function() {
+        loadData(url_agentC)
+      };
 </script>
 </html>

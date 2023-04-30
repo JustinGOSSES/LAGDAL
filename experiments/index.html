@@ -39,7 +39,8 @@
     const url_agent = "results_of_tests/experiment_results_agent.json"
     const url_agentB = "results_of_tests/experiment_results_agentB.json"
     const url_agentC = "results_of_tests/experiment_results_agentC.json"
-    const list_of_urls = [url_main, url_agent, url_agentB, url_agentC]
+    const url_agentD = "results_of_tests/experiment_results_agentD.json"
+    const list_of_urls = [url_main, url_agent, url_agentB, url_agentC, url_agentD]
     const experiments_list_ul = document.getElementById("experiment-list")
 
     function changeExperiment(url) {
@@ -100,7 +101,7 @@
     }
     
     window.onload = function() {
-        loadData(url_agentC)
+        loadData(url_agentD)
       };
 </script>
 </html>

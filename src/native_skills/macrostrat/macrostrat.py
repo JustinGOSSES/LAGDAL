@@ -94,8 +94,8 @@ macroStratColSummarizationWhenNoColumn= PromptTemplate(
     
     Use that information to summarize in a 7-15 sentences of text the geology of the top 1-2 straigraphic layers at that location. Layers given in order of top most first.
     Be sure to:
-     - Describe top and bottom ages of each geologic unit in terms of "millions of years".
-     - Be sure to mention percentage of lithology and depositional enviornment as well as age.
+     - Mention age and lithology. Only if the lithology type is sedimentary mention depositional environment otherwise ignore it.
+     - Do not mention percentage or probability of lithology.
     """
 )
 
@@ -114,11 +114,34 @@ macroStratColSummarization= PromptTemplate(
     
     --input data start-- {macrostrat_column_json}  --input data end-- 
     
-    Use that information to summarize in a 7-15 sentences of text the geology of the top two straigraphic layers at that location. 
+    Use that information to summarize in a 7-15 sentences of text the geology of the straigraphic layers at that location. 
     Be sure to:
      - Describe each of the two layers separately and include the words 'top two layers'. 
      - Describe top and bottom ages of each stratigraphic unit in terms of "millions of years".
      - Be sure to mention percentage of lithology and depositional enviornment as well as age.
+    """
+)
+
+macroStratColSummarizationB= PromptTemplate(
+    input_variables=["macrostrat_column_json"],
+    template="""
+    Given the following macrostrat stratigraphic column information in JSON format in which each stratigraphic layer is a different object in the json 
+    
+    And within that JSON the following keys have these meanings: 
+    t_age = youngest most age for that stratigraphic unit in terms of millions of years
+    b_age = oldest age for that stratigraphic unit in terms of millions of years
+    lith = lithology
+    env = predicted depositional environment
+    pro = probability of each lithology or depositional environment in a given unit
+    
+    --input data start-- {macrostrat_column_json}  --input data end-- 
+    
+    Use that information to summarize in a 7-15 sentences of text the geology of the straigraphic layers at that location. 
+    Be sure to:
+     - Describe each of the two layers separately and include the words 'uppermost rocks close to the surface'. 
+     - Describe top and bottom ages of each stratigraphic unit in terms of "millions of years".
+     - Mention lithology and if the lithology type is sedimentary mention depositional environment.
+     - Do not mention percentage or probability of lithology.
     """
 )
 

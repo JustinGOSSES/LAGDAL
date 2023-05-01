@@ -140,7 +140,7 @@ macroStratColSummarizationB= PromptTemplate(
     Be sure to:
      - Describe each of the two layers separately and include the words 'uppermost rocks close to the surface'. 
      - Describe top and bottom ages of each stratigraphic unit in terms of "millions of years".
-     - Mention lithology and if the lithology type is sedimentary mention depositional environment.
+     - Mention lithology and if the lithology type is sedimentary mention depositional environment. If formation name is known, mention it.
      - Do not mention percentage or probability of lithology.
     """
 )

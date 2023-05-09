@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Macrostrat Geological Map</title>
+    <style>
+        #map {
+            height: 500px;
+            width: 50%;
+            float: left;
+        }
+        #macrostrat-map {
+            height: 500px;
+            width: 50%;
+            float: right;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div id="macrostrat-map"></div>
+     <br>
+    <!-- <div>
+        <label>Latitude:</label>
+        <input type="text" id="latInput">
+        <label>Longitude:</label>
+        <input type="text" id="lngInput">
+        <button id="submitBtn">Go</button>
+    </div> -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+
+    <script>
+        var map = L.map('map').setView([73.8283, -128.5795], 4);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
+            tileSize: 256,
+            zoomOffset: -1
+        }).addTo(map);
+
+        var macrostratMap = L.map('macrostrat-map').setView([73.8283, -128.5795], 4);
+
+        L.tileLayer('https://tiles.macrostrat.org/carto/{z}/{x}/{y}.png', {
+            attribution: '<a href="https://macrostrat.org/">Macrostrat</a>',
+            maxZoom: 18,
+            tileSize: 256,
+            zoomOffset: -1
+        }).addTo(macrostratMap);
+
+    
+        
+        // Create a GeoJSON layer for OpenStreetMap streets
+        var streetsLayer = L.geoJSON(null, {
+            style: {
+                color: '#3388ff',
+                weight: 30,
+                opacity: 0.5
+            }
+        }).addTo(macrostratMap);
+        
+        // Fetch OpenStreetMap street data and add it to the streetsLayer
+        fetch('https://overpass-api.de/api/interpreter?data=[out:json];way["highway"](bbox);out;')
+            .then(response => response.json())
+            .then(data => streetsLayer.addData(data));
+
+        var ignoreNextZoom = false;
+
+        map.on('move', function(e) {
+            if (!ignoreNextZoom) {
+                var center = map.getCenter();
+                macrostratMap.setView(center, map.getZoom(), { animate: false });
+            }
+            ignoreNextZoom = false;
+        });
+
+        macrostratMap.on('move', function(e) {
+            if (!ignoreNextZoom) {
+                var center = macrostratMap.getCenter();
+                map.setView(center, macrostratMap.getZoom(), { animate: false });
+            }
+            ignoreNextZoom = false;
+        });
+
+        map.on('click', function(e) {
+            var latlng = e.latlng;
+            alert("You clicked the OpenStreetMap at latitude: " + latlng.lat + " and longitude: " + latlng.lng);
+        });
+
+        macrostratMap.on('click', function(e) {
+            var latlng = e.latlng;
+            alert("You clicked the Macrostrat Map at latitude: " + latlng.lat + " and longitude: " + latlng.lng);
+        });
+
+        map.on('zoomend', function(e) {
+            ignoreNextZoom = true;
+        });
+
+        macrostratMap.on('zoomend', function(e) {
+            ignoreNextZoom = true;
+        });
+    </script>
+</body>
+</html>

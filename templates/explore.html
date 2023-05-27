@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Macrostrat Geological Map</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <div>
+        <h1 class="title">Experimental Field Trip Planning Productivity Tool</h1>
+    </div>
+    <div>
+        <p style="margin-left:1rem;color:red;"> NOTE: This is in progress! Work will continue. Things don't all work yet.</p>
+        <p style="margin-left:1rem;color:red;">To help explore for outcrops in an area you'll be in, use the topographic map to identify where
+             their could be cliffs, road cuts, or other types of exposed rock. Clicking on a point will bring up 
+            details on the bedrock geology near the surface based on the Macrostrat API. If a Google Streetview
+            image is available near where was clicked, it will appear in lower right. All combined will make it 
+            relatively easy to find outcrops in an area that show the different geologic units.</p>
+    </div>
+    <div>
+        <div id="map" class="mapHolder"></div>
+        <div id="macrostrat-map" class="mapHolder"></div>
+    </div>
+    <div>
+        
+    </div>
+    <div >
+        <div id="streetview" style="height:500px" class="mapHolder"><p style="margin-left:1rem;">A Streetview image will appear here once a click is registered near a photo location. Click near major roads.</p></div>
+            <div id="clickedDiv" class="mapHolder">
+                <div id="lastLatLongClicked" >
+                    <h3>Last Clicked Point</h3>
+                    <span >
+                        <p style=" display: inline; " >Latitude:</p>
+                        <p style=" display: inline; " id="latP">null</p>
+                        <p style=" display: inline; " >Longitude:</p>
+                        <p style=" display: inline; " id="lngP">null</p>
+                    </span> 
+            </div>
+            <div style="display:inline">
+                <div id="RocksAtSurfaceDiv" >
+                    <span style="display:inline">
+                        <h3>Rocks at clicked point</h3>
+                        <p> sometimes top 2 layers, sometimes 2 sources</p>
+                    </span>
+                    <div id="results" class="results-container"></div>
+                </div>
+               
+            </div>
+        </div>
+    </div>
+    
+    <div id="generativeFieldTripStopHolder" class="mapHolder">
+        <div id="GenerativeMenuBar">
+          <button id="generateButton">Generate Field Trip Stop Description</button>
+          <div class="spinner"></div>
+          <div id="infoBoxLastGeneratedPoint">
+            <span>Last point a description generated:</span>
+          </div>
+         
+        </div>
+        <div id="GenerativeText"></div>
+    </div>
+    <div>
+
+    </div>
+    
+   
+    
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script src="{{ url_for('static', filename='js/geology.js') }}"></script> 
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script> 
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAEQFeIOhsNtL2sOGSXkSzT5kx2OQZvhd8&callback=initialize&v=weekly"></script>
+</body>
+</html>

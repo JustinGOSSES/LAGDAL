@@ -1,0 +1,212 @@
+@font-face {
+    font-family: Roboto;
+    src: url('Roboto_Condensed/RobotoCondensed-Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  /* @font-face {
+    font-family: 'Roboto';
+    font-style: NORMAL_OR_ITALIC;
+    font-weight: NUMERIC_WEIGHT_VALUE;
+    src: url(FONT_FILE_NAME.woff2) format('woff2');
+  } */
+
+h1.title{ font-family: Roboto;
+}
+
+h2 {
+    font-family: Roboto;
+}
+
+h3 {
+    font-family: Roboto;
+}
+
+p {
+    font-family: Roboto;
+}
+
+#map {
+    width: 48%;
+    float: left;
+    margin-left: 1%;
+    margin-right: 0.5%;
+}
+#macrostrat-map {
+    width: 49%;
+    float: right;
+    margin-left: 0.5%;
+    margin-right: 1%;
+}
+#streetview {
+    width: 48%;
+    margin-left: 1%;
+    margin-right: 0.5%;
+    float: left;
+    background-color: gray;
+}
+#clickedDiv {
+    width: 49%;
+    float: right;
+    margin-left: 0.5%;
+    margin-right: 1%;
+    height:31.5rem;
+    padding:0.5rem;
+}
+#generativeFieldTripStopHolder {
+    width: 98%;
+    margin-left: 1%;
+    margin-right: 1%;
+    float: left;
+    background-color: rgb(227, 227, 227);
+    overflow: auto; /* Added */
+    min-height:30rem;
+}
+.mapHolder {
+    width: 47.5%;
+    height:25rem;
+    margin-top:0.5%;
+    margin-bottom:0.5%;
+    box-sizing: border-box;
+    border: 1px solid black;
+} 
+.title {
+    text-align: center;
+}
+#lastLatLongClicked {
+    min-height: 2rem;
+    margin-bottom:0rem;
+    background-color: rgb(227, 227, 227);
+    padding: 0.25rem;
+    border-radius: 0.5rem;
+
+}
+
+#RocksAtSurfaceDiv {
+    background-color: rgb(227, 227, 227);
+    padding: 0.25rem;
+    margin-top:0.5rem;
+    height:24.5rem;
+    overflow: auto;
+    border-radius: 0.5rem;
+}
+#results {
+    display: flex;
+    flex-direction: row;
+    /* background-color: rgb(227, 227, 227);
+    padding: 0.25rem; */
+    overflow: scroll;
+}
+.result {
+    display: flex;
+    flex-direction: column;
+    width: 48%;
+    align-items: left;
+    justify-content: center;
+    margin: 0.2rem;
+    padding: 0.2em;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    background-color: rgb(208, 248, 212);
+  }
+  
+  .result h4 {
+    font-size: 1rem;
+    margin:0.02rem;
+  }
+  
+  .result p {
+    margin-bottom: 0.05rem;
+  }
+  
+  .result ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-align: left;
+  }
+  
+  .result li {
+    margin-bottom: 0.05rem;
+  }
+  
+  .result li strong {
+    margin-right: 0.05rem;
+  }
+
+
+  #generativeFieldTripStopHolder {
+    position: relative;
+  }
+  
+  #GenerativeMenuBar {
+    display: flex;
+    align-items: left;
+    padding: 5px;
+    /* border-radius: 10px; */
+    background-color: lightgray;
+    min-width: 50%;
+  }
+  
+  #generateButton {
+    margin-right: 10px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+
+  #generateButton hover {
+    background-color: #285b29;
+  }
+  
+  #infoBox {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: white;
+    border-radius: 0px;
+    margin-left:5px;
+    margin-right:5px;
+  }
+
+  #infoBoxLastGeneratedPoint {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: white;
+    border-radius: 0px;
+    margin-left:5px;
+    margin-right:5px;
+  }
+  
+  #latitude,
+  #longitude {
+    margin-right: 5px;
+  }
+  
+  #GenerativeText {
+    margin-top: 10px;
+    padding:1rem;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border-width: 4px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #4caf50;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 10px;
+    margin-right: 10px;
+    display: none; /* Initially hide the spinner */
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

@@ -12,12 +12,26 @@
     </div>
     <div>
         <p style="margin-left:1rem;color:red;"> NOTE: This is in progress! Uses APIs that have fixed budget, so may break at any time.</p>
-        <p style="margin-left:1rem;">INSTRUCTIONS: Recommend you start with looking at the geologic map to identify areas you
-            are interested in, then use the topographic map to identify where
-             their could be cliffs, road cuts, or other types of exposed rock. Clicking on a point will bring up 
-            details on the bedrock geology near the surface based on the Macrostrat API. If a Google Streetview
-            image is available near where was clicked, it will appear in lower left. Once you've found a good location, use
-            the "generate field trip description" button to get a field trip description using a large language model and deterministic geologic map API.</p>
+        <p style="margin-left:1rem">INSTRUCTIONS:</p>
+        <ol style="margin-left:1rem;">
+            <li>
+                Recommend you start with looking at the geologic map to identify areas you are interested in.
+            </li>
+            <li>
+                Use the topographic map to identify where their could be cliffs, road cuts, or other types of exposed rock. 
+            </li>
+            <li>
+                Clicking on a point will bring up details on the bedrock geology near the surface based on 
+                the <a href='https://macrostrat.org/'>Macrostrat geologic map API</a>.
+                 If a Google Streetview image is available near where was clicked, it will appear in lower left.
+            </li>
+            <li>
+                Once you've found a good location, use the "generate field trip stop description" button to create
+                 a field trip description. It uses a combination of deterministic data from the <a href='https://macrostrat.org/'>Macrostrat geologic map API</a>
+                 and  <a href="https://openai.com/">OpenAI's</a> <a href="https://en.wikipedia.org/wiki/Large_language_model">large language models</a>.
+            </li>
+        </ol>
+       
     </div>
     <div>
         <div id="map" class="mapHolder"></div>
@@ -62,39 +76,75 @@
         <div id="GenerativeText"></div>
     </div>
     <div id="shouldITrust" class="pageWidth">
-        <h3>What is going on here?</h3>
-        <p>The generative field trip description creation process takes as its only arguments a latitude and longitude. Given nothing else is allowed, prompt injection 
-            less of a concern. That is sent to the
-             <a href="https://macrostrat.org/#about">Macrostrat API</a>, which
-        returns a JSON of data about the bedrock of that location. <a href="https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api">Bing Maps API</a>
-         is sometimes used to find address for a latitude and longitude or the
-        inverse. Several other skills are optionally used by the <a href="https://docs.langchain.com/docs/components/agents">langchain agent</a>. 
-        The OpenAI completions API using the GPT-3 text-davinci-003 model takes that data
-        and summarizes it into a small paragraph following the structure of a natural language prompt. That returned few sentence description 
-        is then used together with another prompt about the regional geology to generate the full response using one or more calls to OPENAI's chat 
-         API using GPT 3.5 turbo and finally GPT 4 for the final response creation.  </p>
+        <h3>How is the field trip stop description generated?</h3>
+        <p>
+           If you ask ChatGPT about the geology of a placename, it will occassionally make things up. This is sometimes true for ChatGPT-4 and especially 
+           true for ChatGPT-3. To lessen the chance of parts of the field trip stop description being made up, we are doing several different things 
+           on the backend. First, we start off with deterministic data from the Macrostrat geologic map API for that specific latitude and longitude. 
+           This data comes in the form of a JSON data structure, so we ask GPT-3's text completion API to summarize that data in a format similiar to 
+           what is shown in a prompt. That very point-specific summary of the geology is then used in the prompt that asks about how the local 
+           geology fits into the regional geology. As large language models are text prediction machines, supplying the point-specific summary 
+           into the regional geology question seems to help avoid a lot of the inaccuracies when the asking about the geology of a location in a 
+           single prompt with just a latitude and longitude or just a placename. Additionally, we organize these tasks into the form of an 
+           <a href="https://docs.langchain.com/docs/components/agents">langchain agent</a>, 
+           so the program can choose to get additional information, like placenames from a 
+           <a href="https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api">Bing Maps API</a> call, or retry a step if the returned 
+           response does not seem to include certain pieces of information. Some tasks are done with GPT-3 text completeions models. 
+           Others are done with GPT-4 chat models. The fact that it is doing several OPENAI API calls and at least one 
+           deterministic API call is why generation takes 2-5 minutes. 
+           
+        </p>
+        <p>
+            You can see the code that generates the field trip description
+             in <a href="https://github.com/JustinGOSSES/LAGDAL/blob/main/src/agent_website_explore.py">agent_website_explore.py</a> file.
+             This is a weekend side project to learn. I am really hoping others take this idea and develop it further!
+        </p>
         <h3>Should I trust this?</h3>
         <p>No. All models are wrong. Geologic maps and large language models (LLM) are different types 
-            of models with significant uncertanities and inaccuracies. This is global geologic map, so there is A LOT of lumping things 
-            together and pretending real variation does not exist to make making a map easier. Large language models are not thinking or doing real logic.
-           {% comment %} They are billions of if/then statments in a trenchcoat soaked in math and trained on random collections of stuff found on the internet. {% endcomment %}
-           They are really good at predicting the next sequence of words. When thinking about their strengths, weaknesses, 
-           and how to improve their performance on a task, that's key to remember.
+            of models. They are both going to have inaccuracies. Additionally, the information you want to be told may not be what they have to provide. 
+             This is a global geologic map, so there is A LOT of lumping things 
+            together. Significant real variation in geology will not be shown on it. 
+            As an example, my masters work was on volcanic and sedimentary deposits in a 27 kilometer-wide Eocene-age caldera in 
+            south western Argentina. The entirity of that huge geologic feature is not shown on the geologic map being used
+            and does not get described in most versions of the generative field trip stop description.
+
+            Large language models by themselves are not thinking, doing logic, or referring back to a database of facts.
+           They are really good at predicting the next sequence of words like how certain humans would write them. 
+           This is an amazingly useful skill that a large number of capabilities can be built upon. 
+           However, it also leads to certain types of flaws that are not always easy to detect. It is important to 
+           always keep this in mind when interpreting results or writing code that calls large language models. 
+           By grounding large language models in real data, we can limit some of their flaws. Informed skepticism of the result is very useful. 
         </p>
-           <p>This is a useful starting point for more work. 
-            I will definitely use it on vacations when I'm curious about that rock outcrop we passed on the train.<p>
-        <h3>How to do quality control</h3>
+       
+           <p>I think this might be a useful starting point for quick insights into surface bedrock geology, 
+            that should then be followed up with more research when accuracy is even a little important. 
+            As someone who no longer does geology as their job, I can see
+            myself using it on vacations when I'm curious about that rock outcrop we passed on the train.
+            If you would like to read more writing 
+            about what might be possible and goals of the project, 
+            <a href="https://justingosses.com/blog/LLM-AI-bot-for-geology-field-trips">check out this blog post.</a>
+            <p>
+                <p>
+                    If you see something that the field trip stop description gets wrong, please report it via the 
+                    <a href="https://github.com/JustinGOSSES/LAGDAL/issues/new/choose"> "Fact Wrong"</a> issue template.
+                    It is helpful to collect examples of where errors occur. There is no implied promise to improve 
+                    any specific failing, however, as this is just a weekend side project to learn and see what is possible.
+                </p>
+        <h3>Advice on applying some quality control to the map and generative field trip stop descripion</h3>
            <p>The Macrostrat data is higher resolution in United States than Argentina and many other countries
             . Get a feel for what smaller scale variation you are missing by comparing countries.</p>
             <p>Assume you are not getting any recent sediment on top of hard bedrock in many cases, especially if poorly lithified. Sorry geomorphologists.</p>
-            <p>Check formation names in scientific literature. Be cautions of anything that appears to be a comparison, relational statement, or math.</p>
-            <p>If there is potential for a geographic name of the location clicked to be associated with a geology story in another location, be more skeptical.</p>
-            <p>If the geologic literature on an area is extremely sparse, there is more reason to be skeptical of very detailed descriptions.</p>
+            <p>Check formation names in scientific literature.</p>
+            <p>Be cautious of anything that could have been generated by the model as a comparison, relational statement, or math.</p>
+            <p>If there is potential for a geographic name of the location clicked to be associated with a geology text describing another location, be more skeptical. 
+                Examples include common placenames that exist in many places and areas with lots of geologists writing about geology elsewhere (Houston, London, etc.)</p>
+            <p>If the geologic literature on an area is extremely sparse or the geologic map only has very large scale variations reflected in it, 
+                there is more reason to be skeptical of the field trip stop descriptions.</p>
             <p>Volcanic areas can have lithologies that rapidly change over short distances. Most world-scale geologic maps 
                 and generative text descriptions will not get the 
                 geology right in these areas.
             </p>
-            <p>Descriptions area biased to include information on lithologies. Structural geology, petrology, mineralogy,
+            <p style="padding-bottom:4rem;">Descriptions are biased to include information on lithologies. Structural geology, petrology, mineralogy,
                  and paleontology related information will only lightly appear.</p>
     </div>
     

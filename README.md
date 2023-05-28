@@ -9,6 +9,8 @@ This is currently an experiment on the weekends when I have a little time type o
 
 #### Try it live: https://app-lagdal.azurewebsites.net/ 
 
+#### Try website with only front-end: https://justingosses.github.io/LAGDAL/frontend/
+
 ### Purpose
 The purpose of this project is to see to what degree a description of the local geology like what you might hear 
 on a geology field trip stop could be programmatically generated. 

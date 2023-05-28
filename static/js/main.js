@@ -97,6 +97,18 @@
                 console.error('Error:', error);
               });
           }
+
+          function parseCoordinates(str) {
+            //latitude = 38.861499, longitude = -110.858994
+            const coordinates = {};
+            latlongstrings = str.split(',')
+            latPlus = latlongstrings[0]
+            lngPlus = latlongstrings[1]
+            coordinates.lat = parseFloat(latPlus.split('=')[1].trim())
+            coordinates.lng = parseFloat(lngPlus.split('=')[1].trim())
+            return {"latlng":coordinates}
+          }
+          
         
           function addDataToGenerativeText(jsonData) {
             const generativeText = document.getElementById('GenerativeText');
@@ -104,14 +116,29 @@
             // Extract location and geology_response values from JSON
             const location = jsonData.location;
             const geologyResponse = jsonData.geology_response;
+            // parse coordinates for link
+            console.log("location before coordinatesInObject to be added as onclick = ",location)
+            coordinatesInObject = parseCoordinates(location)
+            console.log("coordinatesInObject to be added as onclick = ",coordinatesInObject)
           
             // Create the div element
             const divElement = document.createElement('div');
-          
+
             // Create the location paragraph element and set its text
             const locationParagraph = document.createElement('p');
-            locationParagraph.textContent = 'Location: ' + location;
-          
+            const locationLink = document.createElement('a');
+            locationLink.textContent = 'Location: ' + location;
+            locationLink.className = "link"
+            
+            // Add a click event listener to the location link
+            locationLink.addEventListener('click', () => {
+                // Simulate the map click behavior when clicked
+                console.log("coordinatesInObject to be added as onclick = ",coordinatesInObject)
+                mapClick(coordinatesInObject)
+            });
+              // Append the location link to the paragraph element
+            locationParagraph.appendChild(locationLink);
+            
             // Create the geology_response paragraph element and set its text
             const geologyResponseParagraph = document.createElement('p');
             geologyResponseParagraph.textContent = 'Geology Response: ' + geologyResponse;
@@ -145,19 +172,13 @@
         function updateLastPointGenerated(locationLatLong){
             const infoBox = document.getElementById('infoBoxLastGeneratedPoint');
             const spanElement = infoBox.querySelector('span');
-            
-            // Get the current text after the colon
-            const currentText = spanElement.innerText.split(': ')[1];
-            
             // Replace the current text with the new text
-            const newText = spanElement.innerText.replace(currentText, locationLatLong);
-            
+            const newText = "updateLastPointGenerated: "+toString(locationLatLong)
             // Update the span element with the new text
             spanElement.innerText = newText;
         }
 
-        function mapClick(e){
-            
+        function mapClick(e){            
             var latlng = e.latlng;
             latitude = parseFloat(latlng.lat.toFixed(6))
             longitude = parseFloat(latlng.lng.toFixed(6))

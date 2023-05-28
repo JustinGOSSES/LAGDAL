@@ -11,12 +11,13 @@
         <h1 class="title">Experimental Field Trip Planning Productivity Tool</h1>
     </div>
     <div>
-        <p style="margin-left:1rem;color:red;"> NOTE: This is in progress! Work will continue. Things don't all work yet.</p>
-        <p style="margin-left:1rem;color:red;">To help explore for outcrops in an area you'll be in, use the topographic map to identify where
+        <p style="margin-left:1rem;color:red;"> NOTE: This is in progress! Uses APIs that have fixed budget, so may break at any time.</p>
+        <p style="margin-left:1rem;">INSTRUCTIONS: Recommend you start with looking at the geologic map to identify areas you
+            are interested in, then use the topographic map to identify where
              their could be cliffs, road cuts, or other types of exposed rock. Clicking on a point will bring up 
             details on the bedrock geology near the surface based on the Macrostrat API. If a Google Streetview
-            image is available near where was clicked, it will appear in lower right. All combined will make it 
-            relatively easy to find outcrops in an area that show the different geologic units.</p>
+            image is available near where was clicked, it will appear in lower left. Once you've found a good location, use
+            the "generate field trip description button.</p>
     </div>
     <div>
         <div id="map" class="mapHolder"></div>
@@ -54,15 +55,44 @@
         <div id="GenerativeMenuBar">
           <button id="generateButton">Generate Field Trip Stop Description</button>
           <div class="spinner"></div>
-          <div id="infoBoxLastGeneratedPoint">
-            <span>Last point a description generated:</span>
+          <div id="generativeNote">
+            <span>Each generation can take 2-5 minutes.</span><span><a href="https://github.com/JustinGOSSES/LAGDAL">Learn more in the code repository</a></span>
           </div>
-         
         </div>
         <div id="GenerativeText"></div>
     </div>
-    <div>
-
+    <div id="shouldITrust" class="pageWidth">
+        <h3>What is going on here?</h3>
+        <p>The generative field trip description creation process takes as its only arguments a latitude and longitude. Given nothing else is allowed, prompt injection 
+            less of a concern. That is sent to the
+             <a href="https://macrostrat.org/#about">Macrostrat API</a>, which
+        returns a JSON of data about the bedrock of that location. <a href="https://www.microsoft.com/en-us/maps/choose-your-bing-maps-api">Bing Maps API</a>
+         is sometimes used to find address for a latitude and longitude or the
+        inverse. Several other skills are optionally used by the <a href="https://docs.langchain.com/docs/components/agents">langchain agent</a>. 
+        The OpenAI completions API using the GPT-3 text-davinci-003 model takes that data
+        and summarizes it into a small paragraph following the structure of a natural language prompt. That returned few sentence description 
+        is then used together with another prompt about the regional geology to generate the full response using one or more calls to OPENAI's chat 
+         API using GPT 3.5 turbo and finally GPT 4 for the final response creation.  </p>
+        <h3>Should I trust this?</h3>
+        <p>No. All models are wrong. Geologic maps and large language models (LLM) are different types 
+            of models with significant uncertanities and inaccuracies. This is global geologic map, so there is A LOT of lumping things 
+            together and pretending real variation does not exist to make making a map easier. Large language models are not thinking or doing real logic.
+           They are billions of if/then statments in a trenchcoat soaked in math and trained on random collections of stuff found on the internet.</p>
+           <p>This is a useful starting point for more work. 
+            I will definitely use it on vacations when I'm curious about that rock outcrop we passed on the train.<p>
+        <h3>How to do quality control</h3>
+           <p>The Macrostrat data is higher resolution in United States than Argentina and many other countries
+            . Get a feel for what smaller scale variation you are missing by comparing countries.</p>
+            <p>Assume you are not getting any recent sediment on top of hard bedrock in many cases, especially if poorly lithified. Sorry geomorphologists.</p>
+            <p>Check formation names in scientific literature. Be cautions of anything that appears to be a comparison, relational statement, or math.</p>
+            <p>If there is potential for a geographic name of the location clicked to be associated with a geology story in another location, be more skeptical.</p>
+            <p>If the geologic literature on an area is extremely sparse, there is more reason to be skeptical of very detailed descriptions.</p>
+            <p>Volcanic areas can have lithologies that rapidly change over short distances. Most world-scale geologic maps 
+                and generative text descriptions will not get the 
+                geology right in these areas.
+            </p>
+            <p>Descriptions area biased to include information on lithologies. Structural geology, petrology, mineralogy,
+                 and paleontology related information will only lightly appear.</p>
     </div>
     
    

@@ -5,6 +5,8 @@ LLM Assisted Geology Descriptions of Arbitrary Locations = LAGDAL
 
 This is currently an experiment on the weekends when I have a little time type of thing.
 
+#### Try it live: https://app-lagdal.azurewebsites.net/ 
+
 *Update: latest experiments with agent can be found here: https://justingosses.github.io/LAGDAL/experiments/ *
 
 ### Purpose

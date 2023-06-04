@@ -222,7 +222,8 @@
                     data =  data["success"]["data"]
                     try {
                         data = data.slice(0, 2)
-                        data.sort((a, b) => a.b_age.localeCompare(b.b_age));
+                        //// when I thought these were first two layers, I ordered them by age but its different resolution maps being used!
+                        //data.sort((a, b) => a.b_age.localeCompare(b.b_age));
                       }
                       catch(err) {
                         data = data

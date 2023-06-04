@@ -22,7 +22,7 @@ def getPointLocationStratColumn(latitude,longitude):
             elif data[0]["max_thick"] > 200:  #### This only returns the first layer if the first layer is more than 200 meters thick. It does this as in most places that won't be out cropping locally!
                 data[0]
             else:
-                return data[0:2]  #### changed this to only the top 2 here! not sure this is right long term
+                return data[0:1]  #### changed this to only the top 1 instead of 2 here! not sure this is right long term. Sometimes top 2 are the top layers of two different maps. One for close zoom and one for far back. Don't want to say same thing twice so only using first item.
         else:
             return "No stratigraphic column data available for this location."
     except:

@@ -131,7 +131,7 @@ The main top-level dependencies are:
 This is used to find city, county, state, country, etc. from lat/long and the inverse.
 
 #### NOTE
-In this repository, we've set there keys are environmental variables. How exactly you do that depends on Operating System and preference. 
+In this repository, we've set the keys as environmental variables. How exactly you do that depends on Operating System and preference. 
 Our environment dependencies is set by conda. 
 
 _Reminder for Justin_......After adding an environmental variable to .bash_profile and running `source ~./bash_profile` it is important to active your conda environment again as it can be easy to forget.

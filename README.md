@@ -141,6 +141,12 @@ _Reminder for Justin_......After adding an environmental variable to .bash_profi
 - `git clone https://github.com/JustinGOSSES/LAGDAL.git`
 - `cd LAGDAL`
 - `pip install requirements.txt` or `conda create --name my_project_env && pip install -r requirements.txt`
+- add keys to your environment variables: 
+  - OPENAI_API_KEY
+  - BING_MAPS_KEY
+- Update google maps API key for the streetview imagery. 
+ - The default included in the front-end code will only work on specific URLs & IPs and will not work on local host.
+ - Search for `https://maps.googleapis.com/maps/api/js` in the code to find location to change it.
 
 ## How to Python Scripts Run locally
 - `cd src`

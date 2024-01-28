@@ -39,7 +39,7 @@ from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extrac
 # llm = OpenAI(model_name="text-davinci-003",temperature=0.2,max_tokens=4096) ### does not work as too short!
 #llm = OpenAI(model_name="gpt-3.5-turbo",temperature=0.2) ### can only do chat? not text?
 # llm = OpenAI(model_name="gpt-4",temperature=0.2, max_tokens=4096)
-llm = OpenAI(model_name="text-davinci-003",temperature=0.0)
+llm = OpenAI(model_name="gpt-3.5-turbo",temperature=0.0)
 
 llm_math_chain = LLMMathChain(llm=llm, verbose=True)
 

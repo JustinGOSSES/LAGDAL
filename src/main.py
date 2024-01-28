@@ -111,7 +111,7 @@ print(" The point location of: ",latitude, "latitude and ",longitude," longitude
 
 
 # llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
-llm = OpenAI(model_name="text-davinci-003",temperature=0.2, max_tokens=256)
+llm = OpenAI(model_name="gpt-4",temperature=0.2, max_tokens=256)
 
 
 

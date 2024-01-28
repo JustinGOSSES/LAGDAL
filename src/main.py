@@ -22,8 +22,8 @@ from native_skills.bing.geocoding import getStateAndCountyFromLatLong, getAddres
 from native_skills.wikipedia.wikipedia import getWikipediaPageAndProcess, extractContentFromWikipediaPageContent
 
 
-latitude = 59.9139
-longitude = 10.7522
+latitude = 40.7128
+longitude = -74.006
 
 ### Style to reword results into
 writerOrWrittingStyle = "Mark Twain"  ## Ernest Hemmingway, Agatha Christie, Plato, Mark Twain, A small child with a lolly pop, etc. 
@@ -111,7 +111,7 @@ print(" The point location of: ",latitude, "latitude and ",longitude," longitude
 
 
 # llm = OpenAI(model_name="text-davinci-003",temperature=0.2)
-llm = OpenAI(model_name="text-davinci-003",temperature=0.2, max_tokens=256)
+llm = OpenAI(model_name="gpt-3.5-turbo",temperature=0.2, max_tokens=256)
 
 
 

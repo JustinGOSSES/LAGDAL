@@ -7,7 +7,8 @@ This is currently an experiment on the weekends when I have a little time type o
 
 *Update: latest experimental results with agent can be found here: https://justingosses.github.io/LAGDAL/experiments/ *
 
-#### Try it live: https://app-lagdal.azurewebsites.net/ 
+
+#### Try it live: https://app-lagdal.azurewebsites.net/ (note the backend of this is no longer working to save $$)
 
 #### Try website with only front-end: https://justingosses.github.io/LAGDAL/frontend/
 

@@ -1,0 +1,8 @@
+{
+    "notebook.output.textLineLimit": 800,
+    "notebook.consolidatedOutputButton": false,
+    "notebook.consolidatedRunButton": true,
+    "notebook.outline.showCodeCells": true,
+    "appService.defaultWebAppToDeploy": "/subscriptions/32fb4453-666d-4056-a11b-e1887dbba8b4/resourceGroups/app-LAGDAL-east/providers/Microsoft.Web/sites/app-LAGDAL",
+    "appService.deploySubpath": "."
+}

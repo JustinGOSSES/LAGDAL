@@ -7,10 +7,17 @@ This is currently an experiment on the weekends when I have a little time type o
 
 *Update: latest experimental results with agent can be found here: https://justingosses.github.io/LAGDAL/experiments/ *
 
+## Status
+### The backend has been shutdown. The full version that was at https://app-lagdal.azurewebsites.net/ is no longer operational
+You can still use this repository to stand up your own version, but you'll need to set up OPENAI and BING Maps API keys 
+and you may need to update the code to use new models or OPENAI API endpoints as those get deprecated over time.
 
-#### Try it live: https://app-lagdal.azurewebsites.net/ (note the backend of this is no longer working to save $$)
+I do not plan any additional development on this at this time, but feel free to ping me in issues or email 
+if you have any questions or ideas. 
 
-#### Try website with only front-end: https://justingosses.github.io/LAGDAL/frontend/
+My thoughts on this project were written up in a blog post at: https://justingosses.com/blog/LLM-AI-bot-for-geology-field-trips-PostMortem
+
+#### You can see the website with front-end only operational: https://justingosses.github.io/LAGDAL/frontend/
 
 ### Purpose
 The purpose of this project is to see to what degree a description of the local geology like what you might hear 

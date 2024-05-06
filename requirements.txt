@@ -34,7 +34,7 @@ httpx==0.26.0
 idna==3.6
 itsdangerous==2.1.2
 jedi==0.19.1
-Jinja2==3.1.2
+Jinja2==3.1.4
 jsonpatch==1.33
 jsonpointer==2.4
 jsonschema==4.4.0

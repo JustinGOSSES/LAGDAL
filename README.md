@@ -9,11 +9,18 @@ This is currently an experiment on the weekends when I have a little time type o
 
 ## Status
 ### The backend has been shutdown. The full version that was at https://app-lagdal.azurewebsites.net/ is no longer operational
-You can still use this repository to stand up your own version, but you'll need to set up OPENAI and BING Maps API keys 
-and you may need to update the code to use new models or OPENAI API endpoints as those get deprecated over time.
 
 I do not plan any additional development on this at this time, but feel free to ping me in issues or email 
 if you have any questions or ideas. 
+
+If you want to try this out yourself, you should be able to fork it and get it working. 
+However, you'll likely need to do some extra work in addition to following instructions to run the code. 
+The OPENAI API available model I was using has likely been deprecated by now as OpenAI changes what's available at a
+fairly rapid pace. If you want to use this repo, you will
+likely have to update the model being called in the OPENAI API function call. Additionally, the dependencies
+are not being kept up to date, so you'll likely need to update those once you fork the repository.  
+For these reasons, I'm going to archive this repository, but should still
+works if you're willing to fork and do those updates. You will also have to set up OPENAI and BING Maps API keys.
 
 My thoughts on this project were written up in a blog post at: https://justingosses.com/blog/LLM-AI-bot-for-geology-field-trips-PostMortem
 
